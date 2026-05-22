@@ -1,0 +1,17 @@
+{
+  "name": "levantamento-escolas",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "vercel dev"
+  },
+  "dependencies": {
+    "@vercel/functions": "^2.0.0",
+    "pg": "^8.13.0"
+  },
+  "devDependencies": {
+    "vercel": "^34.0.0"
+  }
+}

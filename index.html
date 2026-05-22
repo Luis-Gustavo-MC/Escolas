@@ -520,9 +520,58 @@ applyDark(isDark);
    STORAGE MODEL  (baseado em EscolaModel)
 ═══════════════════════════════════════ */
 const STORAGE_KEY = 'levantamento_escolas_v3';
+const API_URL = '/api/escolas';
+let schoolCache = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+let remoteSaveTimer = null;
 
-function loadAll() { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
-function saveAll(list) { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+function loadAll() { return schoolCache; }
+
+function persistLocal(list) {
+  schoolCache = Array.isArray(list) ? list : [];
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(schoolCache));
+}
+
+function saveAll(list) {
+  persistLocal(list);
+  queueRemoteSave();
+}
+
+function queueRemoteSave() {
+  clearTimeout(remoteSaveTimer);
+  remoteSaveTimer = setTimeout(syncToServer, 500);
+}
+
+async function syncToServer() {
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(schoolCache)
+    });
+    if (!res.ok) throw new Error(await res.text());
+  } catch (err) {
+    console.warn('Nao foi possivel sincronizar com o Vercel:', err);
+  }
+}
+
+async function loadFromServer() {
+  try {
+    const res = await fetch(API_URL, { cache: 'no-store' });
+    if (!res.ok) throw new Error(await res.text());
+    const remoteList = await res.json();
+    if (!Array.isArray(remoteList)) return;
+
+    if (remoteList.length) {
+      persistLocal(remoteList);
+      renderList();
+      return;
+    }
+
+    if (schoolCache.length) queueRemoteSave();
+  } catch (err) {
+    console.warn('Usando dados locais. API do Vercel indisponivel:', err);
+  }
+}
 
 /* ═══════════════════════════════════════
    STORAGE SERVICE (fotos c/ metadados)
@@ -1312,6 +1361,7 @@ document.getElementById('school-list').addEventListener('click', function(e) {
 });
 
 renderList();
+loadFromServer();
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
