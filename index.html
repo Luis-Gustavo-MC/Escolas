@@ -78,6 +78,43 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .btn-add{display:flex;align-items:center;gap:8px;width:100%;padding:13px 16px;background:var(--blue);color:#fff;border:none;border-radius:var(--radius);font-size:14px;font-weight:500;cursor:pointer;margin-bottom:12px;transition:opacity .15s}
 .btn-add:active{opacity:.85}
 .btn-add.secondary{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
+.sync-status{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:12px;box-shadow:var(--shadow)}
+.sync-status span{font-size:12px;color:var(--text3);line-height:1.3}
+.sync-dot{width:9px;height:9px;border-radius:50%;background:var(--text4);flex-shrink:0}
+.sync-status.ok .sync-dot{background:var(--green)}
+.sync-status.pending .sync-dot{background:var(--orange)}
+.sync-status.error .sync-dot{background:var(--red)}
+.sync-status.local .sync-dot{background:var(--text4)}
+.filters{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:12px;box-shadow:var(--shadow)}
+.search-input{width:100%;border:1.5px solid var(--input-border);border-radius:var(--radius-sm);padding:10px 12px;font-size:14px;background:var(--input-bg);color:var(--text);outline:none}
+.search-input:focus{border-color:var(--blue)}
+.filter-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.filter-row select{width:100%;border:1.5px solid var(--input-border);border-radius:var(--radius-sm);padding:9px 10px;font-size:13px;background:var(--input-bg);color:var(--text);outline:none}
+.result-count{font-size:12px;color:var(--text3);margin-top:8px}
+.dashboard-charts{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:12px}
+.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow)}
+.chart-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:10px}
+.chart-row{display:grid;grid-template-columns:92px 1fr 34px;gap:8px;align-items:center;margin:8px 0}
+.chart-label{font-size:12px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chart-track{height:8px;background:var(--surface2);border-radius:8px;overflow:hidden}
+.chart-fill{height:100%;border-radius:8px;background:var(--blue);min-width:2px}
+.chart-fill.green{background:var(--green)}
+.chart-fill.orange{background:var(--orange)}
+.chart-fill.red{background:var(--red)}
+.chart-value{font-size:12px;color:var(--text3);text-align:right}
+.chart-split{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:center}
+.donut{width:96px;height:96px;border-radius:50%;background:conic-gradient(var(--red) 0deg,var(--red) 0deg,var(--orange) 0deg,var(--orange) 0deg,var(--green) 0deg,var(--green) 0deg,var(--surface2) 0deg);position:relative}
+.donut::after{content:attr(data-total);position:absolute;inset:18px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--text)}
+.chart-legend{display:grid;gap:7px}
+.legend-item{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:var(--text2)}
+.legend-left{display:flex;align-items:center;gap:7px;min-width:0}
+.legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.legend-dot.red{background:var(--red)}
+.legend-dot.orange{background:var(--orange)}
+.legend-dot.green{background:var(--green)}
+.legend-dot.gray{background:var(--text4)}
+.legend-count{color:var(--text3);font-weight:600}
+.chart-empty{font-size:12px;color:var(--text4);font-style:italic;padding:4px 0}
 
 /* ── EMPTY STATE ── */
 .empty-state{text-align:center;padding:48px 24px;color:var(--text3)}
@@ -100,6 +137,29 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .btn-export{background:var(--green-light);color:var(--green);border-color:var(--green-light)}
 .btn-delete{background:var(--red-light);color:var(--red);border-color:var(--red-light)}
 .btn-pdf{background:var(--orange-light);color:var(--orange);border-color:var(--orange-light)}
+.btn-detail{background:var(--surface2);color:var(--text2);border-color:var(--border)}
+.status-badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:10px;background:var(--green-light);color:var(--green);flex-shrink:0}
+.summary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+.summary-item{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px}
+.summary-item strong{display:block;font-size:16px;color:var(--blue);margin-bottom:2px}
+.summary-item span{font-size:11px;color:var(--text3)}
+.summary-section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.summary-section h2{font-size:13px;color:var(--text);margin-bottom:8px}
+.summary-line{font-size:13px;color:var(--text2);line-height:1.45;margin-bottom:7px}
+.summary-line:last-child{margin-bottom:0}
+.summary-empty{color:var(--text4);font-style:italic}
+.summary-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.summary-actions .btn-add{margin-bottom:0;justify-content:center}
+.summary-actions .btn-add.secondary{background:var(--surface);color:var(--text2)}
+.complete-toggle{width:100%;margin-top:10px;padding:11px;border:1.5px solid var(--green);border-radius:var(--radius-sm);background:var(--green-light);color:var(--green);font-size:13px;font-weight:700;cursor:pointer}
+.complete-toggle.pending{border-color:var(--orange);background:var(--orange-light);color:var(--orange)}
+.visit-list{display:grid;gap:8px;margin-top:10px}
+.visit-item{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px}
+.visit-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:5px}
+.visit-head strong{font-size:13px;color:var(--text)}
+.visit-head small{font-size:11px;color:var(--text3);white-space:nowrap}
+.visit-item p{font-size:12px;color:var(--text2);line-height:1.45;margin:0}
+.visit-remove{border:none;background:transparent;color:var(--red);font-size:12px;font-weight:700;cursor:pointer;margin-top:6px;padding:0}
 
 /* ── MODAL DE CONFIRMAÇÃO ── */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
@@ -217,10 +277,72 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 <!-- ══ LISTA ══ -->
 <div id="view-list" class="view active">
+  <div class="sync-status local" id="sync-status">
+    <span id="sync-text">Dados locais carregados</span>
+    <i class="sync-dot"></i>
+  </div>
+
   <div class="stats-bar" id="stats-bar" style="display:none">
     <div class="stat-pill"><div class="num" id="stat-total">0</div><div class="lbl">Escolas</div></div>
     <div class="stat-pill"><div class="num" id="stat-done">0</div><div class="lbl">Com urgência</div></div>
     <div class="stat-pill"><div class="num" id="stat-pct">0%</div><div class="lbl">Progresso médio</div></div>
+  </div>
+
+
+
+
+
+  <div class="dashboard-charts" id="dashboard-charts" style="display:none">
+    <div class="chart-card">
+      <div class="chart-title">Urgencia das escolas</div>
+      <div class="chart-split">
+        <div class="donut" id="urgency-donut" data-total="0"></div>
+        <div class="chart-legend" id="urgency-legend"></div>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Andamento dos levantamentos</div>
+      <div id="progress-chart"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Pontos criticos do checklist</div>
+      <div id="check-chart"></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Vistorias por mes</div>
+      <div id="month-chart"></div>
+    </div>
+  </div>
+
+  <div class="filters" id="filters" style="display:none">
+    <input class="search-input" id="search-input" type="search" placeholder="Buscar por escola, tecnico ou endereco" oninput="renderList()">
+    <div class="filter-row">
+      <select id="urgency-filter" onchange="renderList()">
+        <option value="">Todas as urgencias</option>
+        <option value="alta">Urgencia alta</option>
+        <option value="media">Urgencia media</option>
+        <option value="baixa">Urgencia baixa</option>
+        <option value="sem">Sem urgencia</option>
+      </select>
+      <select id="progress-filter" onchange="renderList()">
+        <option value="">Todos os status</option>
+        <option value="complete">Concluidas</option>
+        <option value="partial">Em andamento</option>
+        <option value="low">Pouco preenchidas</option>
+      </select>
+    </div>
+    <div class="filter-row">
+      <select id="region-filter" onchange="renderList()">
+        <option value="">Todos os bairros/regioes</option>
+      </select>
+      <select id="sort-filter" onchange="renderList()">
+        <option value="recent">Mais recentes</option>
+        <option value="urgent">Mais urgentes</option>
+        <option value="progress">Menor progresso</option>
+        <option value="name">Nome da escola</option>
+      </select>
+    </div>
+    <div class="result-count" id="result-count"></div>
   </div>
 
   <button class="btn-add" onclick="openNewSchool()">➕ Adicionar escola</button>
@@ -236,6 +358,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 
 <!-- ══ FORMULÁRIO ══ -->
+<!-- RESUMO -->
+<div id="view-summary" class="view">
+  <button class="back-btn" onclick="goBack()">Voltar a lista</button>
+  <div class="form-title" id="summary-title">Resumo da escola</div>
+  <div class="form-subtitle" id="summary-subtitle">Principais informacoes do levantamento</div>
+  <div class="summary-grid" id="summary-grid"></div>
+  <div class="summary-actions">
+    <button class="btn-add" id="summary-edit-btn">Editar</button>
+    <button class="btn-add secondary" id="summary-pdf-btn">PDF</button>
+    <button class="btn-add secondary" id="summary-complete-btn">Concluir</button>
+  </div>
+  <div id="summary-content"></div>
+</div>
+
 <div id="view-form" class="view">
   <button class="back-btn" onclick="goBack()">← Voltar à lista</button>
   <div class="form-title" id="form-title">Nova escola</div>
@@ -458,6 +594,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <button class="urg-btn media" data-val="media" onclick="setUrgency(this)">🟡 Média</button>
         <button class="urg-btn baixa" data-val="baixa" onclick="setUrgency(this)">🟢 Baixa</button>
       </div>
+      <div class="section-divider">Status da vistoria</div>
+      <button class="complete-toggle pending" id="complete-toggle" onclick="toggleCurrentCompleted()">Marcar vistoria como concluida</button>
+    </div>
+  </div>
+
+  <!-- HISTORICO -->
+  <div class="section-block">
+    <div class="section-block-header" onclick="toggleSection(this)">
+      <h2>7. HISTORICO DE VISITAS</h2><span class="chevron">v</span>
+    </div>
+    <div class="section-block-body">
+      <div class="field-group"><label>Data da visita</label><input id="visit-date" type="date"></div>
+      <div class="field-group"><label>Tipo de visita</label><select id="visit-type"><option>Vistoria inicial</option><option>Retorno</option><option>Manutencao</option><option>Conclusao</option><option>Outro</option></select></div>
+      <div class="field-group"><label>Observacao</label><textarea id="visit-notes" rows="3" placeholder="O que foi feito ou combinado nesta visita"></textarea></div>
+      <button class="btn-add secondary" onclick="addVisit()">Adicionar visita</button>
+      <div class="visit-list" id="visit-list"></div>
     </div>
   </div>
 
@@ -523,8 +675,22 @@ const STORAGE_KEY = 'levantamento_escolas_v3';
 const API_URL = '/api/escolas';
 let schoolCache = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
 let remoteSaveTimer = null;
+let lastSyncAt = localStorage.getItem(STORAGE_KEY + '_synced_at') || '';
 
 function loadAll() { return schoolCache; }
+
+function updateSyncStatus(state, text) {
+  const box = document.getElementById('sync-status');
+  const label = document.getElementById('sync-text');
+  if (!box || !label) return;
+  box.className = 'sync-status ' + state;
+  label.textContent = text;
+}
+
+function formatSyncTime() {
+  if (!lastSyncAt) return '';
+  return new Date(lastSyncAt).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+}
 
 function persistLocal(list) {
   schoolCache = Array.isArray(list) ? list : [];
@@ -538,6 +704,7 @@ function saveAll(list) {
 
 function queueRemoteSave() {
   clearTimeout(remoteSaveTimer);
+  updateSyncStatus('pending', 'Sincronizando com o Vercel...');
   remoteSaveTimer = setTimeout(syncToServer, 500);
 }
 
@@ -549,13 +716,18 @@ async function syncToServer() {
       body: JSON.stringify(schoolCache)
     });
     if (!res.ok) throw new Error(await res.text());
+    lastSyncAt = new Date().toISOString();
+    localStorage.setItem(STORAGE_KEY + '_synced_at', lastSyncAt);
+    updateSyncStatus('ok', 'Salvo no Vercel em ' + formatSyncTime());
   } catch (err) {
     console.warn('Nao foi possivel sincronizar com o Vercel:', err);
+    updateSyncStatus('error', 'Sem sincronizacao. Dados salvos neste aparelho.');
   }
 }
 
 async function loadFromServer() {
   try {
+    updateSyncStatus('pending', 'Buscando dados do Vercel...');
     const res = await fetch(API_URL, { cache: 'no-store' });
     if (!res.ok) throw new Error(await res.text());
     const remoteList = await res.json();
@@ -563,13 +735,18 @@ async function loadFromServer() {
 
     if (remoteList.length) {
       persistLocal(remoteList);
+      lastSyncAt = new Date().toISOString();
+      localStorage.setItem(STORAGE_KEY + '_synced_at', lastSyncAt);
+      updateSyncStatus('ok', 'Dados carregados do Vercel em ' + formatSyncTime());
       renderList();
       return;
     }
 
     if (schoolCache.length) queueRemoteSave();
+    else updateSyncStatus('ok', 'Conectado ao Vercel. Nenhuma escola cadastrada.');
   } catch (err) {
     console.warn('Usando dados locais. API do Vercel indisponivel:', err);
+    updateSyncStatus('error', 'Usando dados locais. Vercel indisponivel.');
   }
 }
 
@@ -626,21 +803,74 @@ function exportarEscola(escola) {
 /* ═══════════════════════════════════════
    IMPORT SERVICE
 ═══════════════════════════════════════ */
-function importSchool(input) {
+function downloadTextFile(filename, text, type = 'text/plain;charset=utf-8') {
+  const blob = new Blob([text], { type });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  setTimeout(() => {
+    URL.revokeObjectURL(link.href);
+    document.body.removeChild(link);
+  }, 1000);
+}
+
+function exportAllLevschool() {
+  const list = loadAll();
+  if (!list.length) { showToast('Nenhuma escola para exportar'); return; }
+  const stamp = new Date().toISOString().slice(0, 10);
+  const backup = {
+    type: 'levantamento_escolas_backup',
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    schools: list
+  };
+  downloadTextFile(`levantamento_escolas_${stamp}.levschool`, JSON.stringify(backup, null, 2), 'application/json;charset=utf-8');
+  showToast('Backup .levschool exportado!');
+}
+
+function csvCell(value) {
+  return `"${String(value ?? '').replace(/"/g, '""')}"`;
+}
+
+function exportAllCsv() {
+  const list = loadAll();
+  if (!list.length) { showToast('Nenhuma escola para exportar'); return; }
+  const header = ['nome','endereco','responsavel','telefone','data','tecnico','urgencia','vistoria_concluida','visitas','progresso','problemas','precisa','compras'];
+  const rows = list.map(s => [
+    s.nome, s.endereco, s.responsavel, s.telefone, s.data, s.tecnico, s.urgency,
+    isCompleted(s) ? 'sim' : 'nao',
+    Array.isArray(s.visits) ? s.visits.length : 0,
+    calcProgress(s) + '%',
+    s.problemas, s.precisa, s.compras
+  ].map(csvCell).join(','));
+  const stamp = new Date().toISOString().slice(0, 10);
+  downloadTextFile(`levantamento_escolas_${stamp}.csv`, '\ufeff' + header.join(',') + '\n' + rows.join('\n'), 'text/csv;charset=utf-8');
+  showToast('Resumo CSV exportado!');
+}
+
+function importSchool(input, importAll = false) {
   const file = input.files[0];
   if (!file) return;
   const reader = new FileReader();
   reader.onload = function(e) {
     try {
-      const escola = JSON.parse(e.target.result);
-      escola.id = escola.id || crypto.randomUUID();
+      const imported = JSON.parse(e.target.result);
+      const importedSchools = Array.isArray(imported) ? imported : Array.isArray(imported.schools) ? imported.schools : [imported];
+      if (importAll && importedSchools.length <= 1) {
+        showToast('Este arquivo parece conter apenas uma escola');
+      }
       const list = loadAll();
-      const idx = list.findIndex(s => s.id === escola.id);
-      if (idx > -1) list[idx] = escola;
-      else list.unshift(escola);
+      importedSchools.forEach(escola => {
+        escola.id = escola.id || crypto.randomUUID();
+        const idx = list.findIndex(s => s.id === escola.id);
+        if (idx > -1) list[idx] = escola;
+        else list.unshift(escola);
+      });
       saveAll(list);
       renderList();
-      showToast('✅ Escola importada com sucesso!');
+      showToast(importAll || importedSchools.length > 1 ? 'Importacao geral concluida!' : 'Escola importada com sucesso!');
     } catch(err) {
       showToast('❌ Arquivo inválido ou corrompido');
       console.error(err);
@@ -688,21 +918,199 @@ function calcProgress(s) {
   return Math.round(filled / (chk.length + 1) * 100);
 }
 
+function isCompleted(s) {
+  return Boolean(s?.completedAt || s?.completed);
+}
+
 /* ═══════════════════════════════════════
    RENDER LIST
 ═══════════════════════════════════════ */
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[ch]));
+}
+
+function getFilteredSchools(schools) {
+  const search = (document.getElementById('search-input')?.value || '').trim().toLowerCase();
+  const urgency = document.getElementById('urgency-filter')?.value || '';
+  const progress = document.getElementById('progress-filter')?.value || '';
+  const region = document.getElementById('region-filter')?.value || '';
+  const sort = document.getElementById('sort-filter')?.value || 'recent';
+
+  const filtered = schools.filter(s => {
+    const pct = calcProgress(s);
+    const schoolRegion = getRegion(s);
+    const haystack = [s.nome, s.tecnico, s.endereco, s.responsavel, s.data, schoolRegion]
+      .filter(Boolean).join(' ').toLowerCase();
+    const matchSearch = !search || haystack.includes(search);
+    const matchUrgency = !urgency || (urgency === 'sem' ? !s.urgency : s.urgency === urgency);
+    const matchProgress = !progress ||
+      (progress === 'complete' && pct >= 100) ||
+      (progress === 'partial' && pct >= 35 && pct < 100) ||
+      (progress === 'low' && pct < 35);
+    const matchRegion = !region || schoolRegion === region;
+    return matchSearch && matchUrgency && matchProgress && matchRegion;
+  });
+
+  const urgencyWeight = { alta: 0, media: 1, baixa: 2 };
+  return filtered.sort((a, b) => {
+    if (sort === 'urgent') return (urgencyWeight[a.urgency] ?? 3) - (urgencyWeight[b.urgency] ?? 3);
+    if (sort === 'progress') return calcProgress(a) - calcProgress(b);
+    if (sort === 'name') return (a.nome || '').localeCompare(b.nome || '', 'pt-BR');
+    return new Date(b.updatedAt || b.createdAt || 0) - new Date(a.updatedAt || a.createdAt || 0);
+  });
+}
+
+function percentOf(value, total) {
+  return total ? Math.round((value / total) * 100) : 0;
+}
+
+function getRegion(s) {
+  const endereco = (s.endereco || '').trim();
+  if (!endereco) return 'Sem endereco';
+  const bairroMatch = endereco.match(/(?:bairro|b\.)\s*:?\s*([^,;-]+)/i);
+  if (bairroMatch?.[1]) return cleanRegionName(bairroMatch[1]);
+  const parts = endereco.split(',').map(p => p.trim()).filter(Boolean);
+  if (parts.length >= 3) return cleanRegionName(parts[parts.length - 2]);
+  if (parts.length >= 2) return cleanRegionName(parts[1]);
+  return 'Regiao nao identificada';
+}
+
+function cleanRegionName(value) {
+  return value.replace(/\b(cep|cidade|municipio|n[ºo]?|numero)\b.*$/i, '').trim() || 'Regiao nao identificada';
+}
+
+function countBy(list, getKey) {
+  return list.reduce((acc, item) => {
+    const key = getKey(item) || 'Nao informado';
+    acc[key] = (acc[key] || 0) + 1;
+    return acc;
+  }, {});
+}
+
+function topEntries(counts, limit = 6) {
+  return Object.entries(counts).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'pt-BR')).slice(0, limit);
+}
+
+function chartRow(label, value, total, colorClass = '') {
+  const pct = percentOf(value, total);
+  return `<div class="chart-row">
+    <div class="chart-label" title="${escapeHtml(label)}">${escapeHtml(label)}</div>
+    <div class="chart-track"><div class="chart-fill ${colorClass}" style="width:${pct}%"></div></div>
+    <div class="chart-value">${value}</div>
+  </div>`;
+}
+
+function renderBarChart(id, entries, total, emptyText = 'Sem dados suficientes') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = entries.length
+    ? entries.map(([label, value], idx) => chartRow(label, value, total, idx === 0 ? 'green' : idx < 3 ? 'orange' : '')).join('')
+    : `<div class="chart-empty">${emptyText}</div>`;
+}
+
+function updateRegionFilter(schools) {
+  const select = document.getElementById('region-filter');
+  if (!select) return;
+  const current = select.value;
+  const regions = [...new Set(schools.map(getRegion))].sort((a, b) => a.localeCompare(b, 'pt-BR'));
+  select.innerHTML = '<option value="">Todos os bairros/regioes</option>' +
+    regions.map(region => `<option value="${escapeHtml(region)}">${escapeHtml(region)}</option>`).join('');
+  select.value = regions.includes(current) ? current : '';
+}
+
+function renderCharts(schools) {
+  const wrap = document.getElementById('dashboard-charts');
+  if (!wrap) return;
+  if (!schools.length) {
+    wrap.style.display = 'none';
+    return;
+  }
+  wrap.style.display = 'grid';
+
+  const total = schools.length;
+  const urgency = {
+    alta: schools.filter(s => s.urgency === 'alta').length,
+    media: schools.filter(s => s.urgency === 'media').length,
+    baixa: schools.filter(s => s.urgency === 'baixa').length
+  };
+  const sem = total - urgency.alta - urgency.media - urgency.baixa;
+  const altaDeg = percentOf(urgency.alta, total) * 3.6;
+  const mediaDeg = altaDeg + percentOf(urgency.media, total) * 3.6;
+  const baixaDeg = mediaDeg + percentOf(urgency.baixa, total) * 3.6;
+  const donut = document.getElementById('urgency-donut');
+  if (donut) {
+    donut.dataset.total = total;
+    donut.style.background = `conic-gradient(var(--red) 0deg ${altaDeg}deg, var(--orange) ${altaDeg}deg ${mediaDeg}deg, var(--green) ${mediaDeg}deg ${baixaDeg}deg, var(--surface2) ${baixaDeg}deg 360deg)`;
+  }
+  const legend = document.getElementById('urgency-legend');
+  if (legend) legend.innerHTML = `
+    <div class="legend-item"><span class="legend-left"><i class="legend-dot red"></i>Alta</span><span class="legend-count">${urgency.alta}</span></div>
+    <div class="legend-item"><span class="legend-left"><i class="legend-dot orange"></i>Media</span><span class="legend-count">${urgency.media}</span></div>
+    <div class="legend-item"><span class="legend-left"><i class="legend-dot green"></i>Baixa</span><span class="legend-count">${urgency.baixa}</span></div>
+    <div class="legend-item"><span class="legend-left"><i class="legend-dot gray"></i>Sem urgencia</span><span class="legend-count">${sem}</span></div>
+  `;
+
+  const progress = schools.reduce((acc, s) => {
+    const pct = calcProgress(s);
+    if (pct >= 100) acc.complete++;
+    else if (pct >= 35) acc.partial++;
+    else acc.low++;
+    return acc;
+  }, { complete: 0, partial: 0, low: 0 });
+  const progressChart = document.getElementById('progress-chart');
+  if (progressChart) progressChart.innerHTML =
+    chartRow('Concluidas', progress.complete, total, 'green') +
+    chartRow('Em andamento', progress.partial, total, 'orange') +
+    chartRow('Pouco preenchidas', progress.low, total, 'red');
+
+  const checkItems = [
+    ['Rack existe', 'rack_existe'],
+    ['MikroTik', 'mikrotik'],
+    ['Wi-Fi atende', 'wifi_cob'],
+    ['Laboratorio', 'lab_existe'],
+    ['Energia rack', 'energia_rack']
+  ];
+  const checkChart = document.getElementById('check-chart');
+  if (checkChart) checkChart.innerHTML = checkItems.map(([label, field]) => {
+    const ok = schools.filter(s => s.checks?.[field] === 'sim').length;
+    return chartRow(label, ok, total, ok === total ? 'green' : ok ? 'orange' : 'red');
+  }).join('');
+
+  const monthCounts = countBy(schools, s => {
+    if (!s.data) return 'Sem data';
+    const [year, month] = String(s.data).split('-');
+    if (!year || !month) return 'Sem data';
+    return month + '/' + year;
+  });
+  renderBarChart('month-chart', topEntries(monthCounts, 6), total);
+
+}
+
 function renderList() {
   const el = document.getElementById('school-list');
   const sb = document.getElementById('stats-bar');
+  const filters = document.getElementById('filters');
+  const count = document.getElementById('result-count');
   const schools = loadAll();
+
   if (!schools.length) {
     el.innerHTML = `<div class="empty-state">
       <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg>
-      <p>Nenhuma escola cadastrada ainda.<br>Toque em <strong>Adicionar escola</strong> para começar.</p>
+      <p>Nenhuma escola cadastrada ainda.<br>Toque em <strong>Adicionar escola</strong> para comecar.</p>
     </div>`;
-    sb.style.display = 'none'; return;
+    sb.style.display = 'none';
+    if (filters) filters.style.display = 'none';
+    renderCharts([]);
+    return;
   }
+
   sb.style.display = 'flex';
+  if (filters) filters.style.display = 'block';
+  updateRegionFilter(schools);
+  renderCharts(schools);
+
   const total = schools.length;
   const withUrgency = schools.filter(s => s.urgency).length;
   const avgPct = Math.round(schools.reduce((a, s) => a + calcProgress(s), 0) / total);
@@ -710,24 +1118,36 @@ function renderList() {
   document.getElementById('stat-done').textContent = withUrgency;
   document.getElementById('stat-pct').textContent = avgPct + '%';
 
+  const filtered = getFilteredSchools(schools);
+  if (count) count.textContent = filtered.length + ' de ' + total + ' escolas exibidas';
+
+  if (!filtered.length) {
+    el.innerHTML = `<div class="empty-state"><p>Nenhuma escola encontrada com esses filtros.</p></div>`;
+    return;
+  }
+
   const ub = { alta: 'ub-alta', media: 'ub-media', baixa: 'ub-baixa' };
-  const ulabel = { alta: '🔴 Alta', media: '🟡 Média', baixa: '🟢 Baixa' };
-  el.innerHTML = schools.map(s => {
+  const ulabel = { alta: 'Alta', media: 'Media', baixa: 'Baixa' };
+  el.innerHTML = filtered.map(s => {
     const pct = calcProgress(s);
-    const badge = s.urgency ? `<span class="urgency-badge ${ub[s.urgency]}">${ulabel[s.urgency]}</span>` : '';
-    const dateStr = s.data ? ' • ' + s.data : '';
-    const tech = s.tecnico ? ' • ' + s.tecnico : '';
+    const badges = [
+      isCompleted(s) ? '<span class="status-badge">Concluida</span>' : '',
+      s.urgency ? `<span class="urgency-badge ${ub[s.urgency]}">${ulabel[s.urgency]}</span>` : ''
+    ].join('');
+    const dateStr = s.data ? ' - ' + escapeHtml(s.data) : '';
+    const tech = s.tecnico ? ' - ' + escapeHtml(s.tecnico) : '';
     return `<div class="school-card">
       <div class="school-card-header">
-        <div style="flex:1;min-width:0"><h3 style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.nome || '(sem nome)'}</h3><small>${dateStr}${tech}</small></div>
-        ${badge}
+        <div style="flex:1;min-width:0"><h3 style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(s.nome || '(sem nome)')}</h3><small>${dateStr}${tech}</small></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">${badges}</div>
       </div>
       <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
       <div class="school-actions">
-        <button class="btn-sm btn-open" onclick="editSchool('${s.id}')">✏️ Editar</button>
-        <button class="btn-sm btn-export" data-export-id="${s.id}">📦 Exportar</button>
-        <button class="btn-sm btn-pdf" data-pdf-id="${s.id}">📄 PDF</button>
-        <button class="btn-sm btn-delete" data-delete-id="${s.id}" title="Excluir escola">🗑️ Excluir</button>
+        <button class="btn-sm btn-detail" onclick="openSummary('${s.id}')">Resumo</button>
+        <button class="btn-sm btn-open" onclick="editSchool('${s.id}')">Editar</button>
+        <button class="btn-sm btn-export" data-export-id="${s.id}">Exportar</button>
+        <button class="btn-sm btn-pdf" data-pdf-id="${s.id}">PDF</button>
+        <button class="btn-sm btn-delete" data-delete-id="${s.id}" title="Excluir escola">Excluir</button>
       </div>
     </div>`;
   }).join('');
@@ -736,9 +1156,107 @@ function renderList() {
 /* ═══════════════════════════════════════
    CRUD
 ═══════════════════════════════════════ */
+function valueOrEmpty(value) {
+  return value ? escapeHtml(value) : '<span class="summary-empty">Nao informado</span>';
+}
+
+function checkLabel(value) {
+  return ({ sim: 'Sim', nao: 'Nao', ns: 'Nao sei' })[value] || 'Nao informado';
+}
+
+function summaryLine(label, value) {
+  return `<div class="summary-line"><strong>${label}:</strong> ${valueOrEmpty(value)}</div>`;
+}
+
+function renderVisitSummary(visits) {
+  if (!Array.isArray(visits) || !visits.length) return '<span class="summary-empty">Nenhuma visita registrada</span>';
+  return visits.map(v => `<div class="visit-item">
+    <div class="visit-head"><strong>${escapeHtml(v.type || 'Visita')}</strong><small>${escapeHtml(v.date || '')}</small></div>
+    <p>${valueOrEmpty(v.notes)}</p>
+  </div>`).join('');
+}
+
+function openSummary(id) {
+  const s = loadAll().find(x => x.id === id);
+  if (!s) return;
+  const pct = calcProgress(s);
+  const photos = Array.isArray(s.photos) ? s.photos.length : 0;
+  const visits = Array.isArray(s.visits) ? s.visits.length : 0;
+  const urgencyMap = { alta: 'Alta', media: 'Media', baixa: 'Baixa' };
+  const completed = isCompleted(s);
+
+  document.getElementById('summary-title').textContent = s.nome || 'Resumo da escola';
+  document.getElementById('summary-subtitle').textContent = [s.data, s.tecnico].filter(Boolean).join(' - ') || 'Principais informacoes do levantamento';
+  document.getElementById('summary-grid').innerHTML = `
+    <div class="summary-item"><strong>${pct}%</strong><span>Progresso</span></div>
+    <div class="summary-item"><strong>${urgencyMap[s.urgency] || '-'}</strong><span>Urgencia</span></div>
+    <div class="summary-item"><strong>${completed ? 'Sim' : 'Nao'}</strong><span>Concluida</span></div>
+    <div class="summary-item"><strong>${visits}</strong><span>Visitas</span></div>
+    <div class="summary-item"><strong>${photos}</strong><span>Fotos</span></div>
+    <div class="summary-item"><strong>${s.updatedAt ? new Date(s.updatedAt).toLocaleDateString('pt-BR') : '-'}</strong><span>Atualizado</span></div>
+  `;
+  document.getElementById('summary-edit-btn').onclick = () => editSchool(id);
+  document.getElementById('summary-pdf-btn').onclick = () => gerarPDF(s);
+  const completeBtn = document.getElementById('summary-complete-btn');
+  completeBtn.textContent = completed ? 'Reabrir' : 'Concluir';
+  completeBtn.onclick = () => toggleSchoolCompleted(id);
+  document.getElementById('summary-content').innerHTML = `
+    <div class="summary-section">
+      <h2>Identificacao</h2>
+      ${summaryLine('Endereco', s.endereco)}
+      ${summaryLine('Responsavel', s.responsavel)}
+      ${summaryLine('Telefone', s.telefone)}
+    </div>
+    <div class="summary-section">
+      <h2>Infraestrutura</h2>
+      <div class="summary-line"><strong>Rack:</strong> ${checkLabel(s.checks?.rack_existe)}</div>
+      <div class="summary-line"><strong>MikroTik:</strong> ${checkLabel(s.checks?.mikrotik)}</div>
+      <div class="summary-line"><strong>Wi-Fi atende toda a unidade:</strong> ${checkLabel(s.checks?.wifi_cob)}</div>
+      <div class="summary-line"><strong>Laboratorio:</strong> ${checkLabel(s.checks?.lab_existe)}</div>
+      <div class="summary-line"><strong>Energia do rack:</strong> ${checkLabel(s.checks?.energia_rack)}</div>
+    </div>
+    <div class="summary-section">
+      <h2>Pendencias e conclusao</h2>
+      ${summaryLine('O que tem', s.tem)}
+      ${summaryLine('O que precisa', s.precisa)}
+      ${summaryLine('Problemas', s.problemas)}
+      ${summaryLine('Trabalho tecnico', s.trabalho)}
+      ${summaryLine('Compras', s.compras)}
+    </div>
+    <div class="summary-section">
+      <h2>Historico de visitas</h2>
+      <div class="visit-list">${renderVisitSummary(s.visits)}</div>
+    </div>
+  `;
+  switchView('summary');
+}
+
+function toggleSchoolCompleted(id) {
+  const list = loadAll();
+  const idx = list.findIndex(s => s.id === id);
+  if (idx < 0) return;
+  const school = list[idx];
+  if (isCompleted(school)) {
+    delete school.completedAt;
+    school.completed = false;
+  } else {
+    school.completed = true;
+    school.completedAt = new Date().toISOString();
+  }
+  school.updatedAt = new Date().toISOString();
+  list[idx] = school;
+  saveAll(list);
+  if (currentId === id) {
+    currentData = JSON.parse(JSON.stringify(school));
+    renderCompletionState(currentData);
+  }
+  openSummary(id);
+  showToast(isCompleted(school) ? 'Vistoria concluida' : 'Vistoria reaberta');
+}
+
 function openNewSchool() {
   currentId = crypto.randomUUID();
-  currentData = { id: currentId, checks: {}, radios: {}, photos: [],
+  currentData = { id: currentId, checks: {}, radios: {}, photos: [], visits: [],
     createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
   clearForm();
   document.getElementById('form-title').textContent = 'Nova escola';
@@ -817,6 +1335,11 @@ function clearForm() {
   document.querySelectorAll('.radio-opt').forEach(o => o.classList.remove('selected'));
   document.querySelectorAll('.urg-btn').forEach(b => b.classList.remove('selected'));
   document.getElementById('photo-grid').innerHTML = '';
+  document.getElementById('visit-list').innerHTML = '';
+  document.getElementById('visit-date').value = '';
+  document.getElementById('visit-type').value = 'Vistoria inicial';
+  document.getElementById('visit-notes').value = '';
+  renderCompletionState(currentData);
 }
 
 function loadForm(s) {
@@ -839,6 +1362,62 @@ function loadForm(s) {
   });
   if (s.urgency) { const btn = document.querySelector(`.urg-btn[data-val="${s.urgency}"]`); if (btn) btn.classList.add('selected'); }
   if (s.photos) renderPhotos(s.photos);
+  renderVisitList(s.visits || []);
+  renderCompletionState(s);
+}
+
+function renderCompletionState(s) {
+  const btn = document.getElementById('complete-toggle');
+  if (!btn) return;
+  const done = isCompleted(s);
+  btn.classList.toggle('pending', !done);
+  btn.textContent = done ? 'Vistoria concluida - tocar para reabrir' : 'Marcar vistoria como concluida';
+}
+
+function toggleCurrentCompleted() {
+  if (isCompleted(currentData)) {
+    delete currentData.completedAt;
+    currentData.completed = false;
+  } else {
+    currentData.completed = true;
+    currentData.completedAt = new Date().toISOString();
+  }
+  renderCompletionState(currentData);
+  autoSave();
+}
+
+function renderVisitList(visits) {
+  const el = document.getElementById('visit-list');
+  if (!el) return;
+  if (!Array.isArray(visits) || !visits.length) {
+    el.innerHTML = '<div class="summary-empty">Nenhuma visita registrada</div>';
+    return;
+  }
+  el.innerHTML = visits.map((v, i) => `<div class="visit-item">
+    <div class="visit-head"><strong>${escapeHtml(v.type || 'Visita')}</strong><small>${escapeHtml(v.date || '')}</small></div>
+    <p>${valueOrEmpty(v.notes)}</p>
+    <button class="visit-remove" onclick="removeVisit(${i})">Remover</button>
+  </div>`).join('');
+}
+
+function addVisit() {
+  if (!currentData.visits) currentData.visits = [];
+  const date = document.getElementById('visit-date').value || new Date().toISOString().slice(0, 10);
+  const type = document.getElementById('visit-type').value || 'Visita';
+  const notes = document.getElementById('visit-notes').value.trim();
+  currentData.visits.unshift({ id: crypto.randomUUID(), date, type, notes, createdAt: new Date().toISOString() });
+  document.getElementById('visit-date').value = '';
+  document.getElementById('visit-type').value = 'Vistoria inicial';
+  document.getElementById('visit-notes').value = '';
+  renderVisitList(currentData.visits);
+  autoSave();
+}
+
+function removeVisit(index) {
+  if (!Array.isArray(currentData.visits)) return;
+  currentData.visits.splice(index, 1);
+  renderVisitList(currentData.visits);
+  autoSave();
 }
 
 function collectFormData() {
@@ -849,6 +1428,7 @@ function collectFormData() {
     const el = document.getElementById(id); if (el) currentData[k] = el.value;
   });
   currentData.id = currentId;
+  if (!Array.isArray(currentData.visits)) currentData.visits = [];
   currentData.updatedAt = new Date().toISOString();
 }
 
