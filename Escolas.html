@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1a56db">
+<title>Levantamento Técnico – Escolas</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+/* ── LIGHT MODE (padrão) ── */
+:root{
+  --blue:#1a56db;--blue-light:#e8f0fe;--blue-dark:#1240a3;
+  --green:#16a34a;--green-light:#dcfce7;
+  --red:#dc2626;--red-light:#fee2e2;
+  --orange:#ea580c;--orange-light:#ffedd5;
+
+  --bg:#f9fafb;
+  --surface:#ffffff;
+  --surface2:#f3f4f6;
+  --border:#e5e7eb;
+  --border2:#d1d5db;
+  --text:#1f2937;
+  --text2:#374151;
+  --text3:#6b7280;
+  --text4:#9ca3af;
+  --header-bg:#1a56db;
+  --header-text:#ffffff;
+  --input-bg:#ffffff;
+  --input-border:#d1d5db;
+  --section-header:#1a56db;
+  --section-header-text:#ffffff;
+  --divider-color:#6b7280;
+  --shadow:0 1px 3px rgba(0,0,0,.12);
+  --radius:10px;--radius-sm:6px;
+}
+
+/* ── DARK MODE ── */
+body.dark{
+  --bg:#0f1117;
+  --surface:#1a1d27;
+  --surface2:#252836;
+  --border:#2e3244;
+  --border2:#3a3f55;
+  --text:#e8eaf6;
+  --text2:#c5c8e0;
+  --text3:#8b90b0;
+  --text4:#5c6080;
+  --header-bg:#0d1b4b;
+  --header-text:#e8eaf6;
+  --input-bg:#1e2135;
+  --input-border:#3a3f55;
+  --section-header:#0d1b4b;
+  --section-header-text:#93b4f7;
+  --divider-color:#8b90b0;
+  --blue:#4d80f0;
+  --blue-light:#162050;
+  --green:#22c55e;--green-light:#052e16;
+  --red:#f87171;--red-light:#2d0a0a;
+  --orange:#fb923c;--orange-light:#2c1002;
+  --shadow:0 1px 4px rgba(0,0,0,.4);
+}
+
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);font-size:15px;min-height:100vh;transition:background .25s,color .25s}
+
+/* ── HEADER ── */
+.app-header{background:var(--header-bg);color:var(--header-text);padding:14px 16px 12px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:space-between}
+.app-header-left h1{font-size:16px;font-weight:600;letter-spacing:.01em}
+.app-header-left p{font-size:11px;opacity:.75;margin-top:1px}
+.dark-toggle{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);color:var(--header-text);border-radius:20px;padding:6px 12px;font-size:12px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;transition:background .2s}
+.dark-toggle:active{background:rgba(255,255,255,.25)}
+
+/* ── VIEWS ── */
+.view{display:none;padding:16px;max-width:600px;margin:0 auto}
+.view.active{display:block}
+
+/* ── BOTÕES PRINCIPAIS ── */
+.btn-add{display:flex;align-items:center;gap:8px;width:100%;padding:13px 16px;background:var(--blue);color:#fff;border:none;border-radius:var(--radius);font-size:14px;font-weight:500;cursor:pointer;margin-bottom:12px;transition:opacity .15s}
+.btn-add:active{opacity:.85}
+.btn-add.secondary{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:48px 24px;color:var(--text3)}
+.empty-state svg{margin-bottom:12px;opacity:.35}
+.empty-state p{font-size:14px;line-height:1.6}
+
+/* ── SCHOOL CARD ── */
+.school-card{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow);transition:background .25s,border-color .25s}
+.school-card-header{padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.school-card-header h3{font-size:15px;font-weight:600;color:var(--text)}
+.school-card-header small{font-size:12px;color:var(--text3);margin-top:2px;display:block}
+.urgency-badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:10px;flex-shrink:0}
+.ub-alta{background:var(--red-light);color:var(--red)}
+.ub-media{background:var(--orange-light);color:var(--orange)}
+.ub-baixa{background:var(--green-light);color:var(--green)}
+.school-actions{display:flex;gap:6px;padding:0 16px 14px;flex-wrap:wrap}
+.btn-sm{padding:7px 12px;border-radius:var(--radius-sm);font-size:12px;font-weight:500;cursor:pointer;border:1px solid transparent;display:flex;align-items:center;gap:5px;transition:opacity .15s}
+.btn-sm:active{opacity:.75}
+.btn-open{background:var(--blue-light);color:var(--blue);border-color:var(--blue-light)}
+.btn-export{background:var(--green-light);color:var(--green);border-color:var(--green-light)}
+.btn-delete{background:var(--red-light);color:var(--red);border-color:var(--red-light)}
+.btn-pdf{background:var(--orange-light);color:var(--orange);border-color:var(--orange-light)}
+
+/* ── MODAL DE CONFIRMAÇÃO ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:500;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-box{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);padding:24px 20px 20px;max-width:320px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.25);transform:scale(.95);transition:transform .2s}
+.modal-overlay.open .modal-box{transform:scale(1)}
+.modal-icon{font-size:36px;text-align:center;margin-bottom:10px}
+.modal-title{font-size:16px;font-weight:700;color:var(--text);text-align:center;margin-bottom:6px}
+.modal-msg{font-size:13px;color:var(--text3);text-align:center;line-height:1.5;margin-bottom:20px}
+.modal-name{font-weight:600;color:var(--text)}
+.modal-btns{display:flex;gap:10px}
+.modal-btn{flex:1;padding:11px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:opacity .15s}
+.modal-btn:active{opacity:.8}
+.modal-cancel{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
+.modal-confirm{background:var(--red);color:#fff}
+.progress-bar-wrap{background:var(--surface2);height:4px;margin:0 16px 14px;border-radius:4px;overflow:hidden}
+.progress-bar{height:100%;background:var(--blue);border-radius:4px;transition:width .3s}
+
+/* ── STATS ── */
+.stats-bar{display:flex;gap:8px;margin-bottom:16px}
+.stat-pill{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:8px 12px;text-align:center;transition:background .25s}
+.stat-pill .num{font-size:18px;font-weight:700;color:var(--blue)}
+.stat-pill .lbl{font-size:11px;color:var(--text3)}
+
+/* ── FORM ── */
+.back-btn{display:flex;align-items:center;gap:6px;background:none;border:none;color:var(--blue);font-size:14px;font-weight:500;cursor:pointer;padding:0;margin-bottom:16px}
+.form-title{font-size:20px;font-weight:700;color:var(--text);margin-bottom:4px}
+.form-subtitle{font-size:13px;color:var(--text3);margin-bottom:20px}
+.field-group{margin-bottom:14px}
+.field-group label{display:block;font-size:13px;font-weight:500;color:var(--text2);margin-bottom:5px}
+.field-group input,.field-group textarea,.field-group select{width:100%;padding:10px 12px;border:1.5px solid var(--input-border);border-radius:var(--radius-sm);font-size:14px;background:var(--input-bg);color:var(--text);outline:none;transition:border-color .15s,background .25s}
+.field-group input:focus,.field-group textarea:focus{border-color:var(--blue)}
+.field-group textarea{resize:vertical;min-height:68px}
+.btn-save{width:100%;padding:14px;background:var(--blue);color:#fff;border:none;border-radius:var(--radius);font-size:15px;font-weight:600;cursor:pointer;margin-top:8px;transition:opacity .15s}
+.btn-save:active{opacity:.85}
+
+/* ── SECTIONS ── */
+.section-block{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);margin-bottom:14px;overflow:hidden;box-shadow:var(--shadow);transition:background .25s,border-color .25s}
+.section-block-header{padding:13px 16px;background:var(--section-header);color:var(--section-header-text);cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none}
+.section-block-header h2{font-size:13px;font-weight:600;letter-spacing:.02em}
+.chevron{transition:transform .2s;font-size:16px;opacity:.8}
+.section-block-header.open .chevron{transform:rotate(180deg)}
+.section-block-body{padding:14px 16px;display:none}
+.section-block-body.open{display:block}
+
+/* ── CHECKLIST ── */
+.check-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.check-item:last-child{border-bottom:none}
+.check-item-text{flex:1;font-size:13px;color:var(--text2);line-height:1.45}
+.check-buttons{display:flex;gap:5px;flex-shrink:0;margin-top:1px}
+.chk-btn{width:34px;height:28px;border-radius:var(--radius-sm);border:1.5px solid var(--border2);background:var(--surface2);font-size:11px;cursor:pointer;font-weight:600;color:var(--text3);transition:all .15s}
+.chk-btn.sim{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.chk-btn.nao{background:var(--red-light);border-color:var(--red);color:var(--red)}
+.chk-btn.ns{background:var(--orange-light);border-color:var(--orange);color:var(--orange)}
+
+/* ── RADIO OPTS ── */
+.radio-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.radio-opt{padding:6px 10px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;cursor:pointer;background:var(--surface2);color:var(--text2);transition:all .15s;user-select:none}
+.radio-opt.selected{background:var(--blue-light);border-color:var(--blue);color:var(--blue);font-weight:500}
+
+/* ── INPUTS INLINE ── */
+.inline-input{width:100%;border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;font-size:13px;margin-top:6px;background:var(--input-bg);color:var(--text);outline:none;transition:border-color .15s,background .25s}
+.inline-input:focus{border-color:var(--blue)}
+
+/* ── MINI TABLE ── */
+.mini-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.mini-table th{background:var(--surface2);padding:6px 8px;text-align:left;font-weight:500;color:var(--text3);font-size:11px;border-bottom:1px solid var(--border)}
+.mini-table td{padding:5px 6px;border-bottom:1px solid var(--border);vertical-align:middle}
+.mini-table input{border:1px solid var(--border2);border-radius:4px;padding:4px 6px;font-size:12px;width:100%;background:var(--input-bg);color:var(--text)}
+.mini-table select{border:1px solid var(--border2);border-radius:4px;padding:4px 6px;font-size:12px;background:var(--input-bg);color:var(--text)}
+
+/* ── PHOTOS ── */
+.photo-area{border:2px dashed var(--border2);border-radius:var(--radius);padding:20px;text-align:center;cursor:pointer;background:var(--surface2);margin-top:10px;transition:background .15s,border-color .15s}
+.photo-area:active{background:var(--blue-light);border-color:var(--blue)}
+.photo-area p{font-size:13px;color:var(--text3);margin-top:6px}
+.photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:4px}
+.photo-thumb{position:relative;border-radius:var(--radius-sm);overflow:hidden;background:var(--surface2)}
+.photo-thumb img{width:100%;height:110px;object-fit:cover;display:block}
+.photo-caption{padding:6px 8px;background:var(--surface);border:1px solid var(--border);border-top:none}
+.photo-caption input{border:none;outline:none;font-size:12px;width:100%;background:transparent;color:var(--text2)}
+.photo-caption input::placeholder{color:var(--text4)}
+.del-photo{position:absolute;top:4px;right:4px;background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:15px;cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center}
+#file-input{display:none}
+#import-input{display:none}
+
+/* ── URGENCY ── */
+.urgency-row{display:flex;gap:8px;margin-top:8px}
+.urg-btn{flex:1;padding:10px 8px;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:12px;font-weight:500;cursor:pointer;background:var(--surface2);text-align:center;transition:all .15s;color:var(--text2)}
+.urg-btn.alta{border-color:var(--red);color:var(--red)}
+.urg-btn.alta.selected{background:var(--red-light)}
+.urg-btn.media{border-color:var(--orange);color:var(--orange)}
+.urg-btn.media.selected{background:var(--orange-light)}
+.urg-btn.baixa{border-color:var(--green);color:var(--green)}
+.urg-btn.baixa.selected{background:var(--green-light)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:20px;font-size:13px;z-index:999;transition:transform .3s;white-space:nowrap;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── DIVIDER ── */
+.section-divider{font-size:11px;font-weight:600;color:var(--divider-color);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 6px;padding-bottom:4px;border-bottom:1px solid var(--border)}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="app-header-left">
+    <h1>📋 Levantamento Técnico – Escolas</h1>
+    <p>Secretaria Municipal de Educação</p>
+  </div>
+  <button class="dark-toggle" id="dark-toggle" onclick="toggleDark()">
+    <span id="dark-icon">🌙</span> <span id="dark-label">Noturno</span>
+  </button>
+</div>
+
+<!-- ══ LISTA ══ -->
+<div id="view-list" class="view active">
+  <div class="stats-bar" id="stats-bar" style="display:none">
+    <div class="stat-pill"><div class="num" id="stat-total">0</div><div class="lbl">Escolas</div></div>
+    <div class="stat-pill"><div class="num" id="stat-done">0</div><div class="lbl">Com urgência</div></div>
+    <div class="stat-pill"><div class="num" id="stat-pct">0%</div><div class="lbl">Progresso médio</div></div>
+  </div>
+
+  <button class="btn-add" onclick="openNewSchool()">➕ Adicionar escola</button>
+  <button class="btn-add secondary" onclick="document.getElementById('import-input').click()">📦 Importar arquivo .levschool</button>
+  <input type="file" id="import-input" accept=".levschool" onchange="importSchool(this)">
+
+  <div id="school-list">
+    <div class="empty-state">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg>
+      <p>Nenhuma escola cadastrada ainda.<br>Toque em <strong>Adicionar escola</strong> para começar.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FORMULÁRIO ══ -->
+<div id="view-form" class="view">
+  <button class="back-btn" onclick="goBack()">← Voltar à lista</button>
+  <div class="form-title" id="form-title">Nova escola</div>
+  <div class="form-subtitle">Preencha os dados e o checklist de levantamento técnico</div>
+
+  <!-- 1. IDENTIFICAÇÃO -->
+  <div class="section-block">
+    <div class="section-block-header open" onclick="toggleSection(this)">
+      <h2>1. IDENTIFICAÇÃO DA UNIDADE ESCOLAR</h2><span class="chevron">▾</span>
+    </div>
+    <div class="section-block-body open">
+      <div class="field-group"><label>Nome da escola *</label><input id="f-nome" type="text" placeholder="Ex.: EMEF João da Silva" oninput="autoSave()"></div>
+      <div class="field-group"><label>Endereço completo</label><input id="f-endereco" type="text" placeholder="Rua, número, bairro" oninput="autoSave()"></div>
+      <div class="field-group"><label>Responsável no local / cargo</label><input id="f-responsavel" type="text" oninput="autoSave()"></div>
+      <div class="field-group"><label>Telefone de contato</label><input id="f-telefone" type="tel" oninput="autoSave()"></div>
+      <div class="field-group"><label>Data da vistoria</label><input id="f-data" type="date" oninput="autoSave()"></div>
+      <div class="field-group"><label>Técnico(s) responsável(is)</label><input id="f-tecnico" type="text" oninput="autoSave()"></div>
+    </div>
+  </div>
+
+  <!-- 2. RACK -->
+  <div class="section-block">
+    <div class="section-block-header" onclick="toggleSection(this)">
+      <h2>2. ESTRUTURA DE CHEGADA DOS LINKS (RACK)</h2><span class="chevron">▾</span>
+    </div>
+    <div class="section-block-body">
+      <div class="section-divider">2.1 O rack</div>
+      <div class="check-item"><span class="check-item-text">Existe rack na unidade?</span><div class="check-buttons"><button class="chk-btn" data-field="rack_existe" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="rack_existe" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="rack_existe" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+      <label style="font-size:12px;color:var(--text3);margin-top:10px;display:block">Localização do rack:</label>
+      <textarea class="inline-input" id="f-rack-local" rows="2" placeholder="Descreva o local..." oninput="autoSave()"></textarea>
+      <label style="font-size:12px;color:var(--text3);margin-top:10px;display:block">Estado do rack:</label>
+      <div class="radio-row">
+        <span class="radio-opt" data-group="rack_estado" data-val="fechado" onclick="toggleRadio(this)">Rack fechado</span>
+        <span class="radio-opt" data-group="rack_estado" data-val="aberto" onclick="toggleRadio(this)">Rack aberto/parede</span>
+        <span class="radio-opt" data-group="rack_estado" data-val="sem_rack" onclick="toggleRadio(this)">Sem rack</span>
+        <span class="radio-opt" data-group="rack_estado" data-val="organizado" onclick="toggleRadio(this)">Organizado</span>
+        <span class="radio-opt" data-group="rack_estado" data-val="desorganizado" onclick="toggleRadio(this)">Cabos desorganizados</span>
+        <span class="radio-opt" data-group="rack_estado" data-val="ventilacao" onclick="toggleRadio(this)">Ventilação adequada</span>
+      </div>
+      <textarea class="inline-input" id="f-rack-obs" rows="2" placeholder="Observações gerais do rack..." style="margin-top:8px" oninput="autoSave()"></textarea>
+
+      <div class="section-divider">2.2 Links de internet</div>
+      <label style="font-size:12px;color:var(--text3);display:block;margin-bottom:4px">Qtd. total de links:</label>
+      <input class="inline-input" id="f-links-qtd" type="number" min="0" max="10" placeholder="0" oninput="autoSave()">
+      <div style="overflow-x:auto;margin-top:8px">
+        <table class="mini-table">
+          <thead><tr><th>#</th><th>Operadora</th><th>Velocidade</th><th>Funciona?</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td><input id="op1" placeholder="Vero, Tim..." oninput="autoSave()"></td><td><input id="vel1" placeholder="100Mb" oninput="autoSave()"></td><td><select id="fn1" onchange="autoSave()"><option value="">-</option><option>Sim</option><option>Não</option></select></td></tr>
+            <tr><td>2</td><td><input id="op2" oninput="autoSave()"></td><td><input id="vel2" oninput="autoSave()"></td><td><select id="fn2" onchange="autoSave()"><option value="">-</option><option>Sim</option><option>Não</option></select></td></tr>
+            <tr><td>3</td><td><input id="op3" oninput="autoSave()"></td><td><input id="vel3" oninput="autoSave()"></td><td><select id="fn3" onchange="autoSave()"><option value="">-</option><option>Sim</option><option>Não</option></select></td></tr>
+            <tr><td>4</td><td><input id="op4" oninput="autoSave()"></td><td><input id="vel4" oninput="autoSave()"></td><td><select id="fn4" onchange="autoSave()"><option value="">-</option><option>Sim</option><option>Não</option></select></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <textarea class="inline-input" id="f-link-obs" rows="2" placeholder="Links sem funcionamento? Qual e há quanto tempo..." style="margin-top:8px" oninput="autoSave()"></textarea>
+
+      <div class="section-divider">2.3 Switches</div>
+      <div class="check-item"><span class="check-item-text">Todos os links no mesmo switch?</span><div class="check-buttons"><button class="chk-btn" data-field="sw_mesmo" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="sw_mesmo" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="sw_mesmo" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+      <div class="check-item"><span class="check-item-text">Mais de um switch no rack?</span><div class="check-buttons"><button class="chk-btn" data-field="sw_multi" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="sw_multi" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="sw_multi" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+      <div style="overflow-x:auto;margin-top:8px">
+        <table class="mini-table">
+          <thead><tr><th>#</th><th>Marca/modelo</th><th>Portas</th><th>Gerenc.?</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td><input id="sw1m" oninput="autoSave()"></td><td><input id="sw1p" type="number" oninput="autoSave()"></td><td><select id="sw1g" onchange="autoSave()"><option value="">-</option><option>Sim</option><option>Não</option><option>N/S</option></select></td></tr>
+            <tr><td>2</td><td><input id="sw2m" oninput="autoSave()"></td><td><input id="sw2p" type="number" oninput="autoSave()"></td><td><select id="sw2g" onchange="autoSave()"><option value="">-</option><option>Sim</option><option>Não</option><option>N/S</option></select></td></tr>
+            <tr><td>3</td><td><input id="sw3m" oninput="autoSave()"></td><td><input id="sw3p" type="number" oninput="autoSave()"></td><td><select id="sw3g" onchange="autoSave()"><option value="">-</option><option>Sim</option><option>Não</option><option>N/S</option></select></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-divider">2.4 MikroTik e roteadores</div>
+      <div class="check-item"><span class="check-item-text">Existe MikroTik instalado?</span><div class="check-buttons"><button class="chk-btn" data-field="mikrotik" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="mikrotik" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="mikrotik" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+      <input class="inline-input" id="f-mikrotik-info" placeholder="Quais links / quantos MikroTik..." style="margin-top:6px" oninput="autoSave()">
+      <div class="check-item" style="margin-top:8px"><span class="check-item-text">Existe roteador no rack?</span><div class="check-buttons"><button class="chk-btn" data-field="roteador" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="roteador" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="roteador" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+      <textarea class="inline-input" id="f-roteador-info" rows="2" placeholder="Marca/modelo e operadora configurada..." style="margin-top:6px" oninput="autoSave()"></textarea>
+
+      <div class="section-divider">2.5 Acessos e IPs</div>
+      <textarea class="inline-input" id="f-acessos" rows="3" placeholder="Usuário/senha de roteadores, IPs dos links ativos, IP da impressora..." oninput="autoSave()"></textarea>
+
+      <div class="section-divider">2.6 Fotos do rack — o que foi registrado</div>
+      <div class="radio-row">
+        <span class="radio-opt" data-group="foto_rack" data-val="geral" onclick="toggleRadio(this)">📷 Foto geral</span>
+        <span class="radio-opt" data-group="foto_rack" data-val="switches" onclick="toggleRadio(this)">📷 Switches</span>
+        <span class="radio-opt" data-group="foto_rack" data-val="roteadores" onclick="toggleRadio(this)">📷 Roteadores</span>
+        <span class="radio-opt" data-group="foto_rack" data-val="links" onclick="toggleRadio(this)">📷 Links/ONU</span>
+        <span class="radio-opt" data-group="foto_rack" data-val="cabos" onclick="toggleRadio(this)">📷 Cabos</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. REDE -->
+  <div class="section-block">
+    <div class="section-block-header" onclick="toggleSection(this)">
+      <h2>3. REDE (LÓGICA E CABEAMENTO)</h2><span class="chevron">▾</span>
+    </div>
+    <div class="section-block-body">
+      <div class="section-divider">3.1 Organização da rede</div>
+      <div class="radio-row">
+        <span class="radio-opt" data-group="rede_org" data-val="unica" onclick="toggleRadio(this)">Rede única</span>
+        <span class="radio-opt" data-group="rede_org" data-val="separada" onclick="toggleRadio(this)">Adm/Pedagógico separados</span>
+        <span class="radio-opt" data-group="rede_org" data-val="vlan" onclick="toggleRadio(this)">VLANs</span>
+      </div>
+      <div class="check-item" style="margin-top:8px"><span class="check-item-text">Distribuição de IP automática (DHCP)?</span><div class="check-buttons"><button class="chk-btn" data-field="dhcp" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="dhcp" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="dhcp" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+      <input class="inline-input" id="f-dhcp-fonte" placeholder="Quem fornece o DHCP (roteador, MikroTik, servidor)..." style="margin-top:6px" oninput="autoSave()">
+      <input class="inline-input" id="f-faixa-ip" placeholder="Faixa de IP utilizada (ex.: 192.168.1.x)" style="margin-top:6px" oninput="autoSave()">
+      <div class="check-item" style="margin-top:8px"><span class="check-item-text">Existe servidor local na rede?</span><div class="check-buttons"><button class="chk-btn" data-field="servidor" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="servidor" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="servidor" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+      <input class="inline-input" id="f-servidor-func" placeholder="Função do servidor..." style="margin-top:6px" oninput="autoSave()">
+      <div class="check-item" style="margin-top:8px"><span class="check-item-text">Existe DVR de câmeras ligado à rede?</span><div class="check-buttons"><button class="chk-btn" data-field="dvr" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="dvr" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="dvr" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+
+      <div class="section-divider">3.2 Cabeamento</div>
+      <div class="check-item"><span class="check-item-text">Existe cabeamento estruturado?</span><div class="check-buttons"><button class="chk-btn" data-field="cabo_estrut" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="cabo_estrut" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="cabo_estrut" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+      <div class="radio-row" style="margin-top:6px">
+        <span class="radio-opt" data-group="cabo_tipo" data-val="cat5e" onclick="toggleRadio(this)">Cat5e</span>
+        <span class="radio-opt" data-group="cabo_tipo" data-val="cat6" onclick="toggleRadio(this)">Cat6</span>
+        <span class="radio-opt" data-group="cabo_tipo" data-val="nid" onclick="toggleRadio(this)">Não identificado</span>
+        <span class="radio-opt" data-group="cabo_tipo" data-val="canaleta" onclick="toggleRadio(this)">Em canaletas</span>
+        <span class="radio-opt" data-group="cabo_tipo" data-val="aparente" onclick="toggleRadio(this)">Cabo aparente</span>
+      </div>
+      <div class="check-item" style="margin-top:8px"><span class="check-item-text">Existe patch panel no rack?</span><div class="check-buttons"><button class="chk-btn" data-field="patch_panel" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="patch_panel" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="patch_panel" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+      <div class="check-item"><span class="check-item-text">Pontos/cabos identificados/etiquetados?</span><div class="check-buttons"><button class="chk-btn" data-field="pontos_id" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="pontos_id" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="pontos_id" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+      <div style="overflow-x:auto;margin-top:8px">
+        <table class="mini-table">
+          <thead><tr><th>Pontos de rede</th><th>Qtd.</th><th>Observação</th></tr></thead>
+          <tbody>
+            <tr><td>Existentes e funcionando</td><td><input id="pn-func" type="number" oninput="autoSave()"></td><td><input id="pn-func-obs" oninput="autoSave()"></td></tr>
+            <tr><td>Inativos / com defeito</td><td><input id="pn-ina" type="number" oninput="autoSave()"></td><td><input id="pn-ina-obs" oninput="autoSave()"></td></tr>
+            <tr><td>Novos necessários</td><td><input id="pn-nov" type="number" oninput="autoSave()"></td><td><input id="pn-nov-obs" oninput="autoSave()"></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <input class="inline-input" id="f-dist-rack" placeholder="Distância aprox. rack → ambiente mais distante..." style="margin-top:8px" oninput="autoSave()">
+
+      <div class="section-divider">3.3 Wi-Fi / cobertura sem fio</div>
+      <input class="inline-input" id="f-wifi-qtd" placeholder="Qtd. de roteadores/access points instalados..." oninput="autoSave()">
+      <input class="inline-input" id="f-wifi-modelos" placeholder="Marcas e modelos Wi-Fi..." style="margin-top:6px" oninput="autoSave()">
+      <div class="check-item" style="margin-top:8px"><span class="check-item-text">Cobertura Wi-Fi atende toda a unidade?</span><div class="check-buttons"><button class="chk-btn" data-field="wifi_cob" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="wifi_cob" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="wifi_cob" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+      <textarea class="inline-input" id="f-wifi-sem-sinal" rows="2" placeholder="Ambientes sem sinal ou sinal fraco..." style="margin-top:6px" oninput="autoSave()"></textarea>
+      <div class="check-item"><span class="check-item-text">Wi-Fi separado alunos/administrativo?</span><div class="check-buttons"><button class="chk-btn" data-field="wifi_sep" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="wifi_sep" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="wifi_sep" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+    </div>
+  </div>
+
+  <!-- 4. EQUIPAMENTOS -->
+  <div class="section-block">
+    <div class="section-block-header" onclick="toggleSection(this)">
+      <h2>4. EQUIPAMENTOS E LABORATÓRIO</h2><span class="chevron">▾</span>
+    </div>
+    <div class="section-block-body">
+      <div class="section-divider">4.1 Inventário de equipamentos</div>
+      <div style="overflow-x:auto">
+        <table class="mini-table">
+          <thead><tr><th>Equipamento</th><th>Total</th><th>Func.</th><th>Defeito</th><th>Em rede</th></tr></thead>
+          <tbody>
+            <tr><td>Desktops</td><td><input id="eq1t" type="number" oninput="autoSave()"></td><td><input id="eq1f" type="number" oninput="autoSave()"></td><td><input id="eq1d" type="number" oninput="autoSave()"></td><td><input id="eq1r" type="number" oninput="autoSave()"></td></tr>
+            <tr><td>Notebooks</td><td><input id="eq2t" type="number" oninput="autoSave()"></td><td><input id="eq2f" type="number" oninput="autoSave()"></td><td><input id="eq2d" type="number" oninput="autoSave()"></td><td><input id="eq2r" type="number" oninput="autoSave()"></td></tr>
+            <tr><td>Impressoras</td><td><input id="eq3t" type="number" oninput="autoSave()"></td><td><input id="eq3f" type="number" oninput="autoSave()"></td><td><input id="eq3d" type="number" oninput="autoSave()"></td><td><input id="eq3r" type="number" oninput="autoSave()"></td></tr>
+            <tr><td>Tablets</td><td><input id="eq4t" type="number" oninput="autoSave()"></td><td><input id="eq4f" type="number" oninput="autoSave()"></td><td><input id="eq4d" type="number" oninput="autoSave()"></td><td><input id="eq4r" type="number" oninput="autoSave()"></td></tr>
+            <tr><td>Projetores/TVs</td><td><input id="eq5t" type="number" oninput="autoSave()"></td><td><input id="eq5f" type="number" oninput="autoSave()"></td><td><input id="eq5d" type="number" oninput="autoSave()"></td><td><input id="eq5r" type="number" oninput="autoSave()"></td></tr>
+            <tr><td>Outros</td><td><input id="eq6t" type="number" oninput="autoSave()"></td><td><input id="eq6f" type="number" oninput="autoSave()"></td><td><input id="eq6d" type="number" oninput="autoSave()"></td><td><input id="eq6r" type="number" oninput="autoSave()"></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="section-divider">4.2 Laboratório de informática</div>
+      <div class="check-item"><span class="check-item-text">Possui laboratório de informática?</span><div class="check-buttons"><button class="chk-btn" data-field="lab_existe" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="lab_existe" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="lab_existe" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+      <div class="radio-row" style="margin-top:6px">
+        <span class="radio-opt" data-group="lab_estado" data-val="em_uso" onclick="toggleRadio(this)">Estruturado em uso</span>
+        <span class="radio-opt" data-group="lab_estado" data-val="sem_uso" onclick="toggleRadio(this)">Estruturado sem uso</span>
+        <span class="radio-opt" data-group="lab_estado" data-val="nao_estrut" onclick="toggleRadio(this)">Não estruturado</span>
+      </div>
+      <textarea class="inline-input" id="f-lab-rede" rows="2" placeholder="Como os PCs do laboratório estão ligados à rede..." style="margin-top:8px" oninput="autoSave()"></textarea>
+      <div class="check-item"><span class="check-item-text">Laboratório tem ponto de internet adequado?</span><div class="check-buttons"><button class="chk-btn" data-field="lab_internet" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="lab_internet" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="lab_internet" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+      <textarea class="inline-input" id="f-lab-estado" rows="2" placeholder="Estado geral dos equipamentos do laboratório..." style="margin-top:6px" oninput="autoSave()"></textarea>
+    </div>
+  </div>
+
+  <!-- 5. ELÉTRICA -->
+  <div class="section-block">
+    <div class="section-block-header" onclick="toggleSection(this)">
+      <h2>5. ELÉTRICA E INFRAESTRUTURA</h2><span class="chevron">▾</span>
+    </div>
+    <div class="section-block-body">
+      <div class="section-divider">5.1 Alimentação do rack</div>
+      <div class="check-item"><span class="check-item-text">Rack tem ponto de energia próximo e estável?</span><div class="check-buttons"><button class="chk-btn" data-field="energia_rack" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="energia_rack" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="energia_rack" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+      <div class="check-item"><span class="check-item-text">Existe nobreak/estabilizador para equipamentos?</span><div class="check-buttons"><button class="chk-btn" data-field="nobreak" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="nobreak" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="nobreak" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+      <input class="inline-input" id="f-nobreak-info" placeholder="Marca/modelo e estado do nobreak..." style="margin-top:6px" oninput="autoSave()">
+      <div class="check-item" style="margin-top:8px"><span class="check-item-text">Tomada do rack está em bom estado?</span><div class="check-buttons"><button class="chk-btn" data-field="tomada_rack" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="tomada_rack" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="tomada_rack" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+      <div class="check-item"><span class="check-item-text">Instalação aparenta ter aterramento?</span><div class="check-buttons"><button class="chk-btn" data-field="aterramento" data-val="sim" onclick="setCheck(this)">Sim</button><button class="chk-btn" data-field="aterramento" data-val="nao" onclick="setCheck(this)">Não</button><button class="chk-btn" data-field="aterramento" data-val="ns" onclick="setCheck(this)">N/S</button></div></div>
+
+      <div class="section-divider">5.2 Tomadas e necessidades elétricas</div>
+      <div class="radio-row">
+        <span class="radio-opt" data-group="tomadas_estado" data-val="suficientes" onclick="toggleRadio(this)">Suficientes</span>
+        <span class="radio-opt" data-group="tomadas_estado" data-val="faltam" onclick="toggleRadio(this)">Faltam tomadas</span>
+        <span class="radio-opt" data-group="tomadas_estado" data-val="precarias" onclick="toggleRadio(this)">Precárias/danificadas</span>
+        <span class="radio-opt" data-group="tomadas_estado" data-val="extensoes" onclick="toggleRadio(this)">Extensões improvisadas</span>
+      </div>
+      <textarea class="inline-input" id="f-tomadas-obs" rows="2" placeholder="Ambientes com tomadas precárias, estimativa de novas tomadas..." style="margin-top:8px" oninput="autoSave()"></textarea>
+    </div>
+  </div>
+
+  <!-- 6. CONCLUSÃO -->
+  <div class="section-block">
+    <div class="section-block-header" onclick="toggleSection(this)">
+      <h2>6. OBSERVAÇÕES E CONCLUSÃO</h2><span class="chevron">▾</span>
+    </div>
+    <div class="section-block-body">
+      <div class="section-divider">O que a escola tem</div>
+      <textarea class="inline-input" id="f-tem" rows="3" placeholder="Ex.: 1 aparelho Vero, 1 aparelho Concip, 2 racks..." oninput="autoSave()"></textarea>
+      <div class="section-divider">O que precisa</div>
+      <textarea class="inline-input" id="f-precisa" rows="3" placeholder="Ex.: 2 ubiquiti, 1 switch, 1 rack..." oninput="autoSave()"></textarea>
+      <div class="section-divider">Principais problemas identificados</div>
+      <textarea class="inline-input" id="f-problemas" rows="3" oninput="autoSave()"></textarea>
+      <div class="section-divider">Necessidades de trabalho técnico</div>
+      <textarea class="inline-input" id="f-trabalho" rows="3" oninput="autoSave()"></textarea>
+      <div class="section-divider">Necessidades de compra de equipamentos</div>
+      <textarea class="inline-input" id="f-compras" rows="3" oninput="autoSave()"></textarea>
+      <div class="section-divider">Nível de urgência</div>
+      <div class="urgency-row">
+        <button class="urg-btn alta" data-val="alta" onclick="setUrgency(this)">🔴 Alta</button>
+        <button class="urg-btn media" data-val="media" onclick="setUrgency(this)">🟡 Média</button>
+        <button class="urg-btn baixa" data-val="baixa" onclick="setUrgency(this)">🟢 Baixa</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOTOS -->
+  <div class="section-block">
+    <div class="section-block-header" onclick="toggleSection(this)">
+      <h2>📷 REGISTRO FOTOGRÁFICO</h2><span class="chevron">▾</span>
+    </div>
+    <div class="section-block-body">
+      <div class="photo-grid" id="photo-grid"></div>
+      <div class="photo-area" onclick="document.getElementById('file-input').click()">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--text4)" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M8 5l1.5-2h5L16 5"/></svg>
+        <p>Toque para adicionar fotos<br><small style="font-size:11px">Cada foto pode ter uma legenda</small></p>
+      </div>
+      <input type="file" id="file-input" accept="image/*" multiple onchange="addPhotos(this)">
+    </div>
+  </div>
+
+  <button class="btn-save" onclick="saveSchool()">💾 Salvar escola</button>
+  <div style="height:32px"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Modal de confirmação de exclusão -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-box">
+    <div class="modal-icon">🗑️</div>
+    <div class="modal-title">Excluir escola?</div>
+    <div class="modal-msg">Tem certeza que deseja excluir <span class="modal-name" id="modal-school-name"></span>? Esta ação não pode ser desfeita.</div>
+    <div class="modal-btns">
+      <button class="modal-btn modal-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="modal-btn modal-confirm" id="modal-confirm-btn">Sim, excluir</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   DARK MODE
+═══════════════════════════════════════ */
+const DARK_KEY = 'escola_dark_mode';
+let isDark = localStorage.getItem(DARK_KEY) === '1';
+
+function applyDark(dark) {
+  document.body.classList.toggle('dark', dark);
+  document.getElementById('dark-icon').textContent = dark ? '☀️' : '🌙';
+  document.getElementById('dark-label').textContent = dark ? 'Claro' : 'Noturno';
+}
+
+function toggleDark() {
+  isDark = !isDark;
+  localStorage.setItem(DARK_KEY, isDark ? '1' : '0');
+  applyDark(isDark);
+}
+
+applyDark(isDark);
+
+/* ═══════════════════════════════════════
+   STORAGE MODEL  (baseado em EscolaModel)
+═══════════════════════════════════════ */
+const STORAGE_KEY = 'levantamento_escolas_v3';
+
+function loadAll() { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); }
+function saveAll(list) { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
+
+/* ═══════════════════════════════════════
+   STORAGE SERVICE (fotos c/ metadados)
+═══════════════════════════════════════ */
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = reject;
+    r.readAsDataURL(file);
+  });
+}
+
+async function uploadFoto(file) {
+  const url = await fileToBase64(file);
+  return {
+    id: crypto.randomUUID(),
+    nomeArquivo: file.name,
+    tipo: file.type,
+    tamanho: file.size,
+    url,
+    legenda: ''
+  };
+}
+
+/* ═══════════════════════════════════════
+   EXPORT SERVICE  (.levschool = zip)
+═══════════════════════════════════════ */
+function exportarEscola(escola) {
+  if (!escola) { showToast('❌ Escola não encontrada'); return; }
+  try {
+    const json = JSON.stringify(escola, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const reader = new FileReader();
+    reader.onload = function() {
+      const nome = (escola.nome || 'escola').replace(/[\/\\:*?"<>|]/g, '_');
+      const link = document.createElement('a');
+      link.href = reader.result;
+      link.download = nome + '.levschool';
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => document.body.removeChild(link), 1000);
+      showToast('✅ Arquivo exportado!');
+    };
+    reader.readAsDataURL(blob);
+  } catch(e) {
+    showToast('❌ Erro ao exportar');
+    console.error(e);
+  }
+}
+
+/* ═══════════════════════════════════════
+   IMPORT SERVICE
+═══════════════════════════════════════ */
+function importSchool(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const escola = JSON.parse(e.target.result);
+      escola.id = escola.id || crypto.randomUUID();
+      const list = loadAll();
+      const idx = list.findIndex(s => s.id === escola.id);
+      if (idx > -1) list[idx] = escola;
+      else list.unshift(escola);
+      saveAll(list);
+      renderList();
+      showToast('✅ Escola importada com sucesso!');
+    } catch(err) {
+      showToast('❌ Arquivo inválido ou corrompido');
+      console.error(err);
+    }
+  };
+  reader.onerror = () => showToast('❌ Erro ao ler arquivo');
+  reader.readAsText(file, 'utf-8');
+  input.value = '';
+}
+
+/* ═══════════════════════════════════════
+   STATE
+═══════════════════════════════════════ */
+let currentId = null;
+let currentData = {};
+let autoSaveTimer = null;
+
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+function showToast(msg, dur = 2200) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+/* ═══════════════════════════════════════
+   VIEWS
+═══════════════════════════════════════ */
+function switchView(id) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+/* ═══════════════════════════════════════
+   PROGRESS
+═══════════════════════════════════════ */
+function calcProgress(s) {
+  const chk = ['rack_existe','mikrotik','roteador','dhcp','servidor','dvr','cabo_estrut',
+    'patch_panel','pontos_id','wifi_cob','wifi_sep','lab_existe','lab_internet',
+    'energia_rack','nobreak','tomada_rack','aterramento'];
+  const filled = chk.filter(f => s.checks && s.checks[f]).length + (s.nome ? 1 : 0);
+  return Math.round(filled / (chk.length + 1) * 100);
+}
+
+/* ═══════════════════════════════════════
+   RENDER LIST
+═══════════════════════════════════════ */
+function renderList() {
+  const el = document.getElementById('school-list');
+  const sb = document.getElementById('stats-bar');
+  const schools = loadAll();
+  if (!schools.length) {
+    el.innerHTML = `<div class="empty-state">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10v11M20 10v11M8 14v3M12 14v3M16 14v3"/></svg>
+      <p>Nenhuma escola cadastrada ainda.<br>Toque em <strong>Adicionar escola</strong> para começar.</p>
+    </div>`;
+    sb.style.display = 'none'; return;
+  }
+  sb.style.display = 'flex';
+  const total = schools.length;
+  const withUrgency = schools.filter(s => s.urgency).length;
+  const avgPct = Math.round(schools.reduce((a, s) => a + calcProgress(s), 0) / total);
+  document.getElementById('stat-total').textContent = total;
+  document.getElementById('stat-done').textContent = withUrgency;
+  document.getElementById('stat-pct').textContent = avgPct + '%';
+
+  const ub = { alta: 'ub-alta', media: 'ub-media', baixa: 'ub-baixa' };
+  const ulabel = { alta: '🔴 Alta', media: '🟡 Média', baixa: '🟢 Baixa' };
+  el.innerHTML = schools.map(s => {
+    const pct = calcProgress(s);
+    const badge = s.urgency ? `<span class="urgency-badge ${ub[s.urgency]}">${ulabel[s.urgency]}</span>` : '';
+    const dateStr = s.data ? ' • ' + s.data : '';
+    const tech = s.tecnico ? ' • ' + s.tecnico : '';
+    return `<div class="school-card">
+      <div class="school-card-header">
+        <div style="flex:1;min-width:0"><h3 style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.nome || '(sem nome)'}</h3><small>${dateStr}${tech}</small></div>
+        ${badge}
+      </div>
+      <div class="progress-bar-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
+      <div class="school-actions">
+        <button class="btn-sm btn-open" onclick="editSchool('${s.id}')">✏️ Editar</button>
+        <button class="btn-sm btn-export" data-export-id="${s.id}">📦 Exportar</button>
+        <button class="btn-sm btn-pdf" data-pdf-id="${s.id}">📄 PDF</button>
+        <button class="btn-sm btn-delete" data-delete-id="${s.id}" title="Excluir escola">🗑️ Excluir</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════
+   CRUD
+═══════════════════════════════════════ */
+function openNewSchool() {
+  currentId = crypto.randomUUID();
+  currentData = { id: currentId, checks: {}, radios: {}, photos: [],
+    createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() };
+  clearForm();
+  document.getElementById('form-title').textContent = 'Nova escola';
+  // set today's date
+  document.getElementById('f-data').value = new Date().toISOString().split('T')[0];
+  switchView('form');
+}
+
+function editSchool(id) {
+  const s = loadAll().find(x => x.id === id);
+  if (!s) return;
+  currentId = id;
+  currentData = JSON.parse(JSON.stringify(s));
+  loadForm(s);
+  document.getElementById('form-title').textContent = s.nome || 'Editar escola';
+  switchView('form');
+}
+
+function deleteSchool(id) {
+  const escola = loadAll().find(s => s.id === id);
+  if (!escola) return;
+  document.getElementById('modal-school-name').textContent = escola.nome || '(sem nome)';
+  document.getElementById('modal-confirm-btn').onclick = function() {
+    saveAll(loadAll().filter(s => s.id !== id));
+    closeModal();
+    renderList();
+    showToast('🗑️ Escola excluída');
+  };
+  document.getElementById('confirm-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('confirm-modal').classList.remove('open');
+}
+
+// Fechar modal ao clicar fora
+document.getElementById('confirm-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+function goBack() { switchView('list'); renderList(); }
+
+/* ═══════════════════════════════════════
+   FORM FIELD MAP
+═══════════════════════════════════════ */
+const FIELD_MAP = {
+  nome:'f-nome', endereco:'f-endereco', responsavel:'f-responsavel', telefone:'f-telefone',
+  data:'f-data', tecnico:'f-tecnico', rack_local:'f-rack-local', rack_obs:'f-rack-obs',
+  links_qtd:'f-links-qtd', link_obs:'f-link-obs', mikrotik_info:'f-mikrotik-info',
+  roteador_info:'f-roteador-info', acessos:'f-acessos', dhcp_fonte:'f-dhcp-fonte',
+  faixa_ip:'f-faixa-ip', servidor_func:'f-servidor-func', wifi_qtd:'f-wifi-qtd',
+  wifi_modelos:'f-wifi-modelos', wifi_sem_sinal:'f-wifi-sem-sinal', lab_rede:'f-lab-rede',
+  lab_estado_txt:'f-lab-estado', nobreak_info:'f-nobreak-info', tomadas_obs:'f-tomadas-obs',
+  tem:'f-tem', precisa:'f-precisa', problemas:'f-problemas', trabalho:'f-trabalho',
+  compras:'f-compras', dist_rack:'f-dist-rack'
+};
+const TABLE_MAP = {
+  op1:'op1',vel1:'vel1',op2:'op2',vel2:'vel2',op3:'op3',vel3:'vel3',op4:'op4',vel4:'vel4',
+  fn1:'fn1',fn2:'fn2',fn3:'fn3',fn4:'fn4',
+  sw1m:'sw1m',sw1p:'sw1p',sw1g:'sw1g',sw2m:'sw2m',sw2p:'sw2p',sw2g:'sw2g',
+  sw3m:'sw3m',sw3p:'sw3p',sw3g:'sw3g',
+  pn_func:'pn-func',pn_ina:'pn-ina',pn_nov:'pn-nov',
+  pn_func_obs:'pn-func-obs',pn_ina_obs:'pn-ina-obs',pn_nov_obs:'pn-nov-obs',
+  eq1t:'eq1t',eq1f:'eq1f',eq1d:'eq1d',eq1r:'eq1r',
+  eq2t:'eq2t',eq2f:'eq2f',eq2d:'eq2d',eq2r:'eq2r',
+  eq3t:'eq3t',eq3f:'eq3f',eq3d:'eq3d',eq3r:'eq3r',
+  eq4t:'eq4t',eq4f:'eq4f',eq4d:'eq4d',eq4r:'eq4r',
+  eq5t:'eq5t',eq5f:'eq5f',eq5d:'eq5d',eq5r:'eq5r',
+  eq6t:'eq6t',eq6f:'eq6f',eq6d:'eq6d',eq6r:'eq6r'
+};
+
+function clearForm() {
+  Object.values(FIELD_MAP).forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
+  Object.values(TABLE_MAP).forEach(id => { const e = document.getElementById(id); if (e) e.value = ''; });
+  document.querySelectorAll('.chk-btn').forEach(b => b.className = 'chk-btn');
+  document.querySelectorAll('.radio-opt').forEach(o => o.classList.remove('selected'));
+  document.querySelectorAll('.urg-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('photo-grid').innerHTML = '';
+}
+
+function loadForm(s) {
+  clearForm();
+  Object.entries(FIELD_MAP).forEach(([k, id]) => {
+    const el = document.getElementById(id); if (el && s[k] !== undefined) el.value = s[k];
+  });
+  Object.entries(TABLE_MAP).forEach(([k, id]) => {
+    const el = document.getElementById(id); if (el && s[k] !== undefined) el.value = s[k];
+  });
+  if (s.checks) Object.entries(s.checks).forEach(([field, val]) => {
+    const btn = document.querySelector(`.chk-btn[data-field="${field}"][data-val="${val}"]`);
+    if (btn) applyCheckStyle(btn);
+  });
+  if (s.radios) Object.entries(s.radios).forEach(([group, vals]) => {
+    (Array.isArray(vals) ? vals : [vals]).forEach(v => {
+      const el = document.querySelector(`.radio-opt[data-group="${group}"][data-val="${v}"]`);
+      if (el) el.classList.add('selected');
+    });
+  });
+  if (s.urgency) { const btn = document.querySelector(`.urg-btn[data-val="${s.urgency}"]`); if (btn) btn.classList.add('selected'); }
+  if (s.photos) renderPhotos(s.photos);
+}
+
+function collectFormData() {
+  Object.entries(FIELD_MAP).forEach(([k, id]) => {
+    const el = document.getElementById(id); if (el) currentData[k] = el.value;
+  });
+  Object.entries(TABLE_MAP).forEach(([k, id]) => {
+    const el = document.getElementById(id); if (el) currentData[k] = el.value;
+  });
+  currentData.id = currentId;
+  currentData.updatedAt = new Date().toISOString();
+}
+
+/* ═══════════════════════════════════════
+   AUTO SAVE
+═══════════════════════════════════════ */
+function autoSave() {
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer = setTimeout(() => {
+    collectFormData();
+    const list = loadAll();
+    const idx = list.findIndex(s => s.id === currentId);
+    if (idx > -1) list[idx] = currentData;
+    else list.unshift(currentData);
+    saveAll(list);
+  }, 700);
+}
+
+function saveSchool() {
+  collectFormData();
+  if (!currentData.nome?.trim()) { showToast('⚠️ Informe o nome da escola'); return; }
+  const list = loadAll();
+  const idx = list.findIndex(s => s.id === currentId);
+  if (idx > -1) list[idx] = currentData;
+  else list.unshift(currentData);
+  saveAll(list);
+  showToast('✅ Escola salva com sucesso!');
+  setTimeout(goBack, 1200);
+}
+
+/* ═══════════════════════════════════════
+   CHECK BUTTONS
+═══════════════════════════════════════ */
+function applyCheckStyle(btn) {
+  const field = btn.dataset.field;
+  document.querySelectorAll(`.chk-btn[data-field="${field}"]`).forEach(b => b.className = 'chk-btn');
+  const v = btn.dataset.val;
+  btn.classList.add(v === 'sim' ? 'sim' : v === 'nao' ? 'nao' : 'ns');
+}
+
+function setCheck(btn) {
+  applyCheckStyle(btn);
+  if (!currentData.checks) currentData.checks = {};
+  currentData.checks[btn.dataset.field] = btn.dataset.val;
+  autoSave();
+}
+
+function toggleRadio(el) {
+  const group = el.dataset.group, val = el.dataset.val;
+  el.classList.toggle('selected');
+  if (!currentData.radios) currentData.radios = {};
+  if (!currentData.radios[group]) currentData.radios[group] = [];
+  const arr = currentData.radios[group];
+  const idx = arr.indexOf(val);
+  if (idx > -1) arr.splice(idx, 1); else arr.push(val);
+  autoSave();
+}
+
+function setUrgency(btn) {
+  document.querySelectorAll('.urg-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  currentData.urgency = btn.dataset.val;
+  autoSave();
+}
+
+/* ═══════════════════════════════════════
+   PHOTOS (StorageService integration)
+═══════════════════════════════════════ */
+async function addPhotos(input) {
+  const files = Array.from(input.files);
+  if (!currentData.photos) currentData.photos = [];
+  for (const file of files) {
+    const foto = await uploadFoto(file);
+    currentData.photos.push(foto);
+  }
+  renderPhotos(currentData.photos);
+  autoSave();
+  input.value = '';
+}
+
+function renderPhotos(photos) {
+  const grid = document.getElementById('photo-grid');
+  if (!photos || !photos.length) { grid.innerHTML = ''; return; }
+  grid.innerHTML = photos.map((p, i) => `
+    <div class="photo-thumb">
+      <img src="${p.url || p.src || ''}" alt="${p.legenda || ''}">
+      <button class="del-photo" onclick="delPhoto(${i})">×</button>
+      <div class="photo-caption">
+        <input value="${(p.legenda || p.caption || '').replace(/"/g,'&quot;')}" placeholder="Legenda (opcional)"
+          oninput="updateCaption(${i},this.value)">
+      </div>
+    </div>`).join('');
+}
+
+function delPhoto(i) {
+  currentData.photos.splice(i, 1);
+  renderPhotos(currentData.photos);
+  autoSave();
+}
+
+function updateCaption(i, val) {
+  if (currentData.photos[i]) {
+    currentData.photos[i].legenda = val;
+    currentData.photos[i].caption = val;
+  }
+  autoSave();
+}
+
+/* ═══════════════════════════════════════
+   SECTION TOGGLE
+═══════════════════════════════════════ */
+function toggleSection(header) {
+  header.classList.toggle('open');
+  header.nextElementSibling.classList.toggle('open');
+}
+
+/* ═══════════════════════════════════════
+   GERAR PDF
+═══════════════════════════════════════ */
+async function gerarPDF(escola) {
+  if (!escola) { showToast('❌ Escola não encontrada'); return; }
+  showToast('⏳ Gerando PDF...');
+  try {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    const PW = 210; // page width mm
+    const PH = 297;
+    const ML = 15; // margin left
+    const MR = 15; // margin right
+    const CW = PW - ML - MR; // content width
+    let y = 15;
+
+    const BLUE = [26, 86, 219];
+    const DARK = [31, 41, 55];
+    const GRAY = [107, 114, 128];
+    const LIGHT = [243, 244, 246];
+    const WHITE = [255, 255, 255];
+    const GREEN = [22, 163, 74];
+    const RED = [220, 38, 38];
+    const ORANGE = [234, 88, 12];
+
+    function checkPage(needed) {
+      if (y + needed > PH - 15) { doc.addPage(); y = 15; return true; }
+      return false;
+    }
+
+    function drawHeader() {
+      // Blue header bar
+      doc.setFillColor(...BLUE);
+      doc.rect(0, 0, PW, 28, 'F');
+      doc.setTextColor(...WHITE);
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text('LEVANTAMENTO TÉCNICO – UNIDADE ESCOLAR', ML, 11);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Secretaria Municipal de Educação', ML, 17);
+      // School name
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'bold');
+      doc.text((escola.nome || '').toUpperCase(), ML, 24);
+      y = 35;
+    }
+
+    function sectionTitle(title) {
+      checkPage(12);
+      doc.setFillColor(...BLUE);
+      doc.rect(ML, y, CW, 7, 'F');
+      doc.setTextColor(...WHITE);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.text(title, ML + 3, y + 5);
+      y += 10;
+      doc.setTextColor(...DARK);
+    }
+
+    function subTitle(title) {
+      checkPage(8);
+      doc.setTextColor(...BLUE);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.text(title, ML, y);
+      y += 5;
+      doc.setTextColor(...DARK);
+    }
+
+    function field(label, value, inline) {
+      if (!value && value !== 0) return;
+      const str = String(value).trim();
+      if (!str) return;
+      checkPage(7);
+      doc.setFontSize(7.5);
+      if (inline) {
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...GRAY);
+        doc.text(label + ':', ML, y);
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(...DARK);
+        const lw = doc.getTextWidth(label + ': ');
+        const lines = doc.splitTextToSize(str, CW - lw);
+        doc.text(lines, ML + lw, y);
+        y += lines.length * 4.5;
+      } else {
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...GRAY);
+        doc.text(label, ML, y);
+        y += 4;
+        doc.setFont('helvetica', 'normal');
+        doc.setTextColor(...DARK);
+        const lines = doc.splitTextToSize(str, CW);
+        checkPage(lines.length * 4.5 + 2);
+        doc.text(lines, ML, y);
+        y += lines.length * 4.5 + 1;
+      }
+    }
+
+    function checkField(label, val) {
+      checkPage(6);
+      doc.setFontSize(7.5);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...GRAY);
+      doc.text(label + ':', ML, y);
+      if (val) {
+        const x2 = ML + doc.getTextWidth(label + ': ');
+        const color = val === 'sim' ? GREEN : val === 'nao' ? RED : ORANGE;
+        const label2 = val === 'sim' ? '✓ Sim' : val === 'nao' ? '✗ Não' : '? Não sabe';
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...color);
+        doc.text(label2, x2, y);
+      }
+      y += 5;
+      doc.setTextColor(...DARK);
+    }
+
+    function divider() {
+      checkPage(4);
+      doc.setDrawColor(...LIGHT);
+      doc.setLineWidth(0.3);
+      doc.line(ML, y, ML + CW, y);
+      y += 3;
+    }
+
+    function tableRow(cols, widths, isHeader) {
+      checkPage(7);
+      const rowH = 6;
+      let x = ML;
+      doc.setFontSize(7);
+      cols.forEach((col, i) => {
+        const w = widths[i];
+        if (isHeader) {
+          doc.setFillColor(...LIGHT);
+          doc.rect(x, y - 4.5, w, rowH, 'F');
+          doc.setFont('helvetica', 'bold');
+          doc.setTextColor(...GRAY);
+        } else {
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(...DARK);
+        }
+        doc.text(String(col || ''), x + 1.5, y);
+        x += w;
+      });
+      y += rowH;
+    }
+
+    // ── PAGE 1 ──
+    drawHeader();
+
+    // 1. Identificação
+    sectionTitle('1. IDENTIFICAÇÃO DA UNIDADE ESCOLAR');
+    field('Nome da escola', escola.nome, true);
+    field('Endereço', escola.endereco, true);
+    field('Responsável / cargo', escola.responsavel, true);
+    field('Telefone', escola.telefone, true);
+    field('Data da vistoria', escola.data, true);
+    field('Técnico responsável', escola.tecnico, true);
+    y += 2;
+
+    // Urgência badge
+    if (escola.urgency) {
+      const urgMap = { alta: ['🔴 URGÊNCIA ALTA', RED], media: ['🟡 URGÊNCIA MÉDIA', ORANGE], baixa: ['🟢 URGÊNCIA BAIXA', GREEN] };
+      const [txt, cor] = urgMap[escola.urgency] || ['', GRAY];
+      doc.setFillColor(...cor);
+      doc.roundedRect(ML, y, 50, 7, 2, 2, 'F');
+      doc.setTextColor(...WHITE);
+      doc.setFontSize(8);
+      doc.setFont('helvetica', 'bold');
+      doc.text(txt, ML + 3, y + 5);
+      y += 11;
+      doc.setTextColor(...DARK);
+    }
+
+    divider();
+
+    // 2. Rack
+    sectionTitle('2. ESTRUTURA DE CHEGADA DOS LINKS (RACK)');
+    subTitle('2.1 O Rack');
+    checkField('Existe rack', escola.checks?.rack_existe);
+    field('Localização', escola.rack_local, true);
+    field('Estado / observações', escola.rack_obs, false);
+
+    subTitle('2.2 Links de Internet');
+    const temLinks = [escola.op1,escola.op2,escola.op3,escola.op4].some(x=>x);
+    if (temLinks) {
+      tableRow(['#','Operadora','Velocidade','Funciona?'],[8,55,40,37], true);
+      [[1,escola.op1,escola.vel1,escola.fn1],[2,escola.op2,escola.vel2,escola.fn2],
+       [3,escola.op3,escola.vel3,escola.fn3],[4,escola.op4,escola.vel4,escola.fn4]]
+        .filter(r=>r[1]).forEach(r => tableRow(r,[8,55,40,37], false));
+      y += 2;
+    }
+    field('Observações links', escola.link_obs, false);
+
+    subTitle('2.3 Switches');
+    checkField('Todos os links no mesmo switch', escola.checks?.sw_mesmo);
+    checkField('Mais de um switch no rack', escola.checks?.sw_multi);
+    const temSwitches = [escola.sw1m,escola.sw2m,escola.sw3m].some(x=>x);
+    if (temSwitches) {
+      tableRow(['#','Marca / Modelo','Portas','Gerenciável?'],[8,65,22,45], true);
+      [[1,escola.sw1m,escola.sw1p,escola.sw1g],[2,escola.sw2m,escola.sw2p,escola.sw2g],
+       [3,escola.sw3m,escola.sw3p,escola.sw3g]]
+        .filter(r=>r[1]).forEach(r => tableRow(r,[8,65,22,45], false));
+      y += 2;
+    }
+
+    subTitle('2.4 MikroTik e Roteadores');
+    checkField('MikroTik instalado', escola.checks?.mikrotik);
+    field('Info MikroTik', escola.mikrotik_info, true);
+    checkField('Roteador no rack', escola.checks?.roteador);
+    field('Info roteador', escola.roteador_info, false);
+    field('Acessos / IPs', escola.acessos, false);
+
+    divider();
+
+    // 3. Rede
+    sectionTitle('3. REDE (LÓGICA E CABEAMENTO)');
+    subTitle('3.1 Organização da Rede');
+    checkField('DHCP automático', escola.checks?.dhcp);
+    field('Fonte DHCP', escola.dhcp_fonte, true);
+    field('Faixa de IP', escola.faixa_ip, true);
+    checkField('Servidor local', escola.checks?.servidor);
+    field('Função do servidor', escola.servidor_func, true);
+    checkField('DVR de câmeras na rede', escola.checks?.dvr);
+
+    subTitle('3.2 Cabeamento');
+    checkField('Cabeamento estruturado', escola.checks?.cabo_estrut);
+    checkField('Patch panel no rack', escola.checks?.patch_panel);
+    checkField('Pontos/cabos identificados', escola.checks?.pontos_id);
+    const temPontos = escola.pn_func || escola.pn_ina || escola.pn_nov;
+    if (temPontos) {
+      tableRow(['Pontos de Rede','Qtd.','Observação'],[60,20,60], true);
+      if (escola.pn_func) tableRow(['Existentes e funcionando', escola.pn_func, escola.pn_func_obs||''], [60,20,60], false);
+      if (escola.pn_ina)  tableRow(['Inativos / com defeito',   escola.pn_ina,  escola.pn_ina_obs||''],  [60,20,60], false);
+      if (escola.pn_nov)  tableRow(['Novos necessários',        escola.pn_nov,  escola.pn_nov_obs||''],  [60,20,60], false);
+      y += 2;
+    }
+    field('Dist. rack → ambiente mais distante', escola.dist_rack, true);
+
+    subTitle('3.3 Wi-Fi');
+    field('Qtd. access points', escola.wifi_qtd, true);
+    field('Modelos Wi-Fi', escola.wifi_modelos, true);
+    checkField('Cobertura atende toda a unidade', escola.checks?.wifi_cob);
+    field('Áreas sem sinal', escola.wifi_sem_sinal, false);
+    checkField('Wi-Fi separado alunos/adm', escola.checks?.wifi_sep);
+
+    divider();
+
+    // 4. Equipamentos
+    sectionTitle('4. EQUIPAMENTOS E LABORATÓRIO DE INFORMÁTICA');
+    subTitle('4.1 Inventário de Equipamentos');
+    const eqRows = [
+      ['Computadores (desktop)', escola.eq1t, escola.eq1f, escola.eq1d, escola.eq1r],
+      ['Notebooks',              escola.eq2t, escola.eq2f, escola.eq2d, escola.eq2r],
+      ['Impressoras',            escola.eq3t, escola.eq3f, escola.eq3d, escola.eq3r],
+      ['Tablets',                escola.eq4t, escola.eq4f, escola.eq4d, escola.eq4r],
+      ['Projetores / TVs',       escola.eq5t, escola.eq5f, escola.eq5d, escola.eq5r],
+      ['Outros',                 escola.eq6t, escola.eq6f, escola.eq6d, escola.eq6r],
+    ].filter(r => r[1]);
+    if (eqRows.length) {
+      tableRow(['Equipamento','Total','Funcionando','Com defeito','Em rede'],[55,20,28,28,20], true);
+      eqRows.forEach(r => tableRow(r,[55,20,28,28,20], false));
+      y += 2;
+    }
+
+    subTitle('4.2 Laboratório de Informática');
+    checkField('Possui laboratório', escola.checks?.lab_existe);
+    field('Conexão dos PCs do lab', escola.lab_rede, false);
+    checkField('Ponto de internet adequado', escola.checks?.lab_internet);
+    field('Estado geral do laboratório', escola.lab_estado_txt, false);
+
+    divider();
+
+    // 5. Elétrica
+    sectionTitle('5. ELÉTRICA E INFRAESTRUTURA FÍSICA');
+    checkField('Energia próxima e estável para o rack', escola.checks?.energia_rack);
+    checkField('Nobreak / estabilizador', escola.checks?.nobreak);
+    field('Info nobreak', escola.nobreak_info, true);
+    checkField('Tomada do rack em bom estado', escola.checks?.tomada_rack);
+    checkField('Instalação com aterramento', escola.checks?.aterramento);
+    field('Observações elétricas', escola.tomadas_obs, false);
+
+    divider();
+
+    // 6. Conclusão
+    sectionTitle('6. OBSERVAÇÕES GERAIS E CONCLUSÃO');
+    field('O que a escola tem', escola.tem, false);
+    field('O que precisa', escola.precisa, false);
+    field('Principais problemas identificados', escola.problemas, false);
+    field('Necessidades de trabalho técnico', escola.trabalho, false);
+    field('Necessidades de compra de equipamentos', escola.compras, false);
+
+    // Signature line
+    checkPage(20);
+    y += 5;
+    doc.setDrawColor(...GRAY);
+    doc.setLineWidth(0.3);
+    doc.line(ML, y, ML+80, y);
+    doc.line(ML+100, y, ML+CW, y);
+    doc.setFontSize(7);
+    doc.setTextColor(...GRAY);
+    doc.text('Técnico responsável pela vistoria', ML, y+4);
+    doc.text('Responsável pela unidade escolar', ML+100, y+4);
+    if (escola.tecnico) {
+      doc.setTextColor(...DARK);
+      doc.setFontSize(7.5);
+      doc.text(escola.tecnico, ML, y-2);
+    }
+    y += 12;
+
+    // ── FOTOS ──
+    const photos = (escola.photos || []).filter(p => p.url && p.url.startsWith('data:'));
+    if (photos.length) {
+      doc.addPage();
+      drawHeader();
+      sectionTitle('REGISTRO FOTOGRÁFICO');
+
+      const imgW = (CW - 8) / 2;
+      const imgH = imgW * 0.65;
+      let col = 0;
+
+      for (const foto of photos) {
+        checkPage(imgH + 12);
+        const x = ML + col * (imgW + 8);
+        try {
+          const ext = (foto.tipo || 'image/jpeg').includes('png') ? 'PNG' : 'JPEG';
+          doc.addImage(foto.url, ext, x, y, imgW, imgH);
+          // caption box
+          doc.setFillColor(...LIGHT);
+          doc.rect(x, y + imgH, imgW, 7, 'F');
+          doc.setFontSize(6.5);
+          doc.setFont('helvetica', 'normal');
+          doc.setTextColor(...DARK);
+          const cap = foto.legenda || foto.caption || foto.nomeArquivo || '';
+          const capLines = doc.splitTextToSize(cap, imgW - 3);
+          doc.text(capLines[0] || '', x + 1.5, y + imgH + 4.5);
+        } catch(imgErr) {
+          // skip bad image
+          doc.setFillColor(...LIGHT);
+          doc.rect(x, y, imgW, imgH, 'F');
+          doc.setTextColor(...GRAY);
+          doc.setFontSize(7);
+          doc.text('Imagem indisponível', x + 3, y + imgH/2);
+        }
+        col++;
+        if (col === 2) { col = 0; y += imgH + 10; }
+      }
+      if (col === 1) y += imgH + 10;
+    }
+
+    // ── DOWNLOAD ──
+    const nomePDF = (escola.nome || 'escola').replace(/[^\w\s\-]/gi, '_');
+    const pdfDataUri = doc.output('datauristring');
+    const link = document.createElement('a');
+    link.href = pdfDataUri;
+    link.download = nomePDF + '_relatorio.pdf';
+    document.body.appendChild(link);
+    link.click();
+    setTimeout(() => document.body.removeChild(link), 1000);
+    showToast('✅ PDF gerado!');
+  } catch(e) {
+    showToast('❌ Erro ao gerar PDF');
+    console.error(e);
+  }
+}
+
+/* ═══════════════════════════════════════
+   INIT
+═══════════════════════════════════════ */
+// Delegação de evento para botão PDF
+document.getElementById('school-list').addEventListener('click', function(e) {
+  const btn = e.target.closest('[data-pdf-id]');
+  if (!btn) return;
+  const id = btn.dataset.pdfId;
+  const escola = loadAll().find(x => x.id === id);
+  gerarPDF(escola);
+});
+
+// Delegação de evento para botão excluir
+document.getElementById('school-list').addEventListener('click', function(e) {
+  const btn = e.target.closest('[data-delete-id]');
+  if (!btn) return;
+  deleteSchool(btn.dataset.deleteId);
+});
+
+// Delegação de evento para botão exportar (evita CSP inline)
+document.getElementById('school-list').addEventListener('click', function(e) {
+  const btn = e.target.closest('[data-export-id]');
+  if (!btn) return;
+  const id = btn.dataset.exportId;
+  const escola = loadAll().find(x => x.id === id);
+  exportarEscola(escola);
+});
+
+renderList();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</body>
+</html>
