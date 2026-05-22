@@ -284,7 +284,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
   <div class="stats-bar" id="stats-bar" style="display:none">
     <div class="stat-pill"><div class="num" id="stat-total">0</div><div class="lbl">Escolas</div></div>
-    <div class="stat-pill"><div class="num" id="stat-done">0</div><div class="lbl">Com urgência</div></div>
+    <div class="stat-pill"><div class="num" id="stat-done">0</div><div class="lbl">Concluidas</div></div>
     <div class="stat-pill"><div class="num" id="stat-pct">0%</div><div class="lbl">Progresso médio</div></div>
   </div>
 
@@ -945,10 +945,11 @@ function getFilteredSchools(schools) {
       .filter(Boolean).join(' ').toLowerCase();
     const matchSearch = !search || haystack.includes(search);
     const matchUrgency = !urgency || (urgency === 'sem' ? !s.urgency : s.urgency === urgency);
+    const done = isCompleted(s);
     const matchProgress = !progress ||
-      (progress === 'complete' && pct >= 100) ||
-      (progress === 'partial' && pct >= 35 && pct < 100) ||
-      (progress === 'low' && pct < 35);
+      (progress === 'complete' && done) ||
+      (progress === 'partial' && !done && pct >= 35) ||
+      (progress === 'low' && !done && pct < 35);
     const matchRegion = !region || schoolRegion === region;
     return matchSearch && matchUrgency && matchProgress && matchRegion;
   });
@@ -1054,7 +1055,7 @@ function renderCharts(schools) {
 
   const progress = schools.reduce((acc, s) => {
     const pct = calcProgress(s);
-    if (pct >= 100) acc.complete++;
+    if (isCompleted(s)) acc.complete++;
     else if (pct >= 35) acc.partial++;
     else acc.low++;
     return acc;
@@ -1112,10 +1113,10 @@ function renderList() {
   renderCharts(schools);
 
   const total = schools.length;
-  const withUrgency = schools.filter(s => s.urgency).length;
+  const completed = schools.filter(isCompleted).length;
   const avgPct = Math.round(schools.reduce((a, s) => a + calcProgress(s), 0) / total);
   document.getElementById('stat-total').textContent = total;
-  document.getElementById('stat-done').textContent = withUrgency;
+  document.getElementById('stat-done').textContent = completed;
   document.getElementById('stat-pct').textContent = avgPct + '%';
 
   const filtered = getFilteredSchools(schools);
@@ -1242,6 +1243,7 @@ function toggleSchoolCompleted(id) {
   } else {
     school.completed = true;
     school.completedAt = new Date().toISOString();
+    delete school.urgency;
   }
   school.updatedAt = new Date().toISOString();
   list[idx] = school;
@@ -1249,6 +1251,7 @@ function toggleSchoolCompleted(id) {
   if (currentId === id) {
     currentData = JSON.parse(JSON.stringify(school));
     renderCompletionState(currentData);
+    document.querySelectorAll('.urg-btn').forEach(b => b.classList.remove('selected'));
   }
   openSummary(id);
   showToast(isCompleted(school) ? 'Vistoria concluida' : 'Vistoria reaberta');
@@ -1381,6 +1384,8 @@ function toggleCurrentCompleted() {
   } else {
     currentData.completed = true;
     currentData.completedAt = new Date().toISOString();
+    delete currentData.urgency;
+    document.querySelectorAll('.urg-btn').forEach(b => b.classList.remove('selected'));
   }
   renderCompletionState(currentData);
   autoSave();
@@ -1543,6 +1548,29 @@ function updateCaption(i, val) {
 function toggleSection(header) {
   header.classList.toggle('open');
   header.nextElementSibling.classList.toggle('open');
+}
+
+function normalizePdfImage(src) {
+  return new Promise((resolve, reject) => {
+    if (!src) { reject(new Error('Imagem sem origem')); return; }
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.naturalWidth || img.width;
+        canvas.height = img.naturalHeight || img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(img, 0, 0);
+        resolve(canvas.toDataURL('image/jpeg', 0.88));
+      } catch (err) {
+        reject(err);
+      }
+    };
+    img.onerror = () => reject(new Error('Falha ao carregar imagem'));
+    img.src = src;
+  });
 }
 
 /* ═══════════════════════════════════════
@@ -1708,7 +1736,7 @@ async function gerarPDF(escola) {
 
     // Urgência badge
     if (escola.urgency) {
-      const urgMap = { alta: ['🔴 URGÊNCIA ALTA', RED], media: ['🟡 URGÊNCIA MÉDIA', ORANGE], baixa: ['🟢 URGÊNCIA BAIXA', GREEN] };
+      const urgMap = { alta: ['URGENCIA ALTA', RED], media: ['URGENCIA MEDIA', ORANGE], baixa: ['URGENCIA BAIXA', GREEN] };
       const [txt, cor] = urgMap[escola.urgency] || ['', GRAY];
       doc.setFillColor(...cor);
       doc.roundedRect(ML, y, 50, 7, 2, 2, 'F');
@@ -1857,7 +1885,7 @@ async function gerarPDF(escola) {
     y += 12;
 
     // ── FOTOS ──
-    const photos = (escola.photos || []).filter(p => p.url && p.url.startsWith('data:'));
+    const photos = (escola.photos || []).filter(p => (p.url || p.src || '').startsWith('data:image/'));
     if (photos.length) {
       doc.addPage();
       drawHeader();
@@ -1871,8 +1899,8 @@ async function gerarPDF(escola) {
         checkPage(imgH + 12);
         const x = ML + col * (imgW + 8);
         try {
-          const ext = (foto.tipo || 'image/jpeg').includes('png') ? 'PNG' : 'JPEG';
-          doc.addImage(foto.url, ext, x, y, imgW, imgH);
+          const imgData = await normalizePdfImage(foto.url || foto.src);
+          doc.addImage(imgData, 'JPEG', x, y, imgW, imgH);
           // caption box
           doc.setFillColor(...LIGHT);
           doc.rect(x, y + imgH, imgW, 7, 'F');
